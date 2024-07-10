@@ -1,25 +1,35 @@
-import { FC } from "react"
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
-import { App } from "../App"
-import { PrivateRoutes } from "./PrivateRoutes"
-
-const { BASE_URL } = import.meta.env
+import { FC } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { App } from "../App";
+import { PrivateRoutes } from "./PrivateRoutes";
+import {Logout, AuthPage, useAuth} from '../modules/auth'
+const { BASE_URL } = import.meta.env;
 
 const AppRoutes: FC = () => {
-    return (
-        <BrowserRouter basename={BASE_URL}>
-            <Routes>
-                <Route path="/" element={<App />}>
-                    <Route path="/*" element={<PrivateRoutes />} />
-                    <Route index element={<Navigate to="/private-route" />} />
-                    {/* 
-                    If authenticated user navigate to private routes
-                    Else navigate to public/auth routes
-                    */}
-                </Route>
-            </Routes>
-        </BrowserRouter>
-    )
-}
+    const {currentUser} = useAuth()
+  return (
+    <BrowserRouter basename={BASE_URL}>
+      <Routes>
+      <Route element={<App />}>
+       
+      
+          <Route path='logout' element={<Logout />} />
+       
+          {currentUser ? (
+            <>
+              <Route path="/*" element={<PrivateRoutes />} />
+              <Route index element={<Navigate to="/mypage" />} />
+            </>
+          ) : (
+            <>
+              <Route path="auth/*" element={<AuthPage />} />
+              <Route path="*" element={<Navigate to="/auth" />} />
+            </>
+          )}
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
-export { AppRoutes }
+export { AppRoutes };

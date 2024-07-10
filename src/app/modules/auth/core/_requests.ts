@@ -9,29 +9,37 @@ export const REGISTER_URL = `${API_URL}/register`;
 export const REQUEST_PASSWORD_URL = `${API_URL}/forgot_password`;
 
 // Server should return AuthModel
-export function login(email: string, password: string) {
+export function login(mobile: any, otp: string) {
   return axios.post<AuthModel>(LOGIN_URL, {
-    email,
-    password,
+    mobile,
+    otp,
   });
 }
 
 // Server should return AuthModel
 export function register(
-  email: string,
-  firstname: string,
-  lastname: string,
-  password: string,
-  password_confirmation: string
+  mobile: any,
+    otp: any,
 ) {
   return axios.post(REGISTER_URL, {
-    email,
-    first_name: firstname,
-    last_name: lastname,
-    password,
-    password_confirmation,
+    mobile:mobile,
+    otp:otp,
   });
 }
+
+export const sendOtp = async (mobile: string) => {
+  const url = `http://devapi.checkmeinweb.com/APIv2/OTP/?CountryCode=91&MobileNo=${mobile}`;
+  return axios.get(url);
+}
+
+// Function to verify OTP
+export const verifyOtp = async (mobile: string, otp: string) => {
+  const url = `http://devapi.checkmeinweb.com/APIv2/OTP/auth_OTP_app/index.php?OTP=${otp}&MobileNo=91${mobile}`;
+  return axios.get(url);
+}
+
+
+
 
 // Server should return object => { result: boolean } (Is Email in DB)
 export function requestPassword(email: string) {
