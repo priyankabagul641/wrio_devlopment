@@ -14,13 +14,16 @@ import './_metronic/assets/keenicons/outline/style.css'
 import './_metronic/assets/keenicons/solid/style.css'
 
 import './_metronic/assets/sass/style.scss'
+import { AuthProvider } from './app/modules/auth/index.ts'
 
 const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <MetronicI18nProvider>
-        <AppRoutes />
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
       </MetronicI18nProvider>
     </QueryClientProvider>
     {/* <ReactQueryDevtools initialIsOpen={false} /> */}

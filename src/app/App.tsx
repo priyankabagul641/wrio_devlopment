@@ -4,7 +4,7 @@ import { LayoutProvider, LayoutSplashScreen } from "../_metronic/layout/core";
 import { Suspense } from "react";
 import { MasterInit } from "../_metronic/layout/MasterInit";
 import { ThemeModeProvider } from "../_metronic/partials";
-// import { AuthInit } from "./modules/auth";
+import { AuthInit } from "./modules/auth";
 
 
 const App = () => {
@@ -13,10 +13,10 @@ const App = () => {
             <I18nProvider>
                 <LayoutProvider>
                     <ThemeModeProvider>
-                        {/* <AuthInit> */}
-                        <Outlet />
-                        <MasterInit />
-                        {/* </AuthInit> */}
+                        <AuthInit>
+                            <Outlet />
+                            <MasterInit />
+                        </AuthInit>
                     </ThemeModeProvider>
                 </LayoutProvider>
             </I18nProvider>

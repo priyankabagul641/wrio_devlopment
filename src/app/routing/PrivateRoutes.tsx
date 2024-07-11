@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router-dom"
-import { MyPage } from "../pages/MyPage"
+import { HomePage } from "../pages/HomePage"
 
 const PrivateRoutes = () => {
     return (
         <Routes>
-            <Route path="/private-route" element={<MyPage />} />
+            <Route path="/home" element={<HomePage />} />
         </Routes>
     )
 }
