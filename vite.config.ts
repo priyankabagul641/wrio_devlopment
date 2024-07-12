@@ -32,5 +32,5 @@ export default defineConfig({
       type: 'module',
     },
   })],
-  base: '/dev',
+  base: '/',
 })

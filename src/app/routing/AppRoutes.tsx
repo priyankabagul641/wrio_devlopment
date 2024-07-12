@@ -13,7 +13,7 @@ const AppRoutes: FC = () => {
     return (
         <BrowserRouter basename={BASE_URL}>
             <Routes>
-                <Route path="/" element={<App />}>
+                <Route element={<App />}>
                     <Route path='error/*' element={<ErrorsPage />} />
                     <Route path='logout' element={<Logout />} />
                     {currentUser ? (
