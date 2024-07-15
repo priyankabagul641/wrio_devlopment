@@ -28,13 +28,13 @@ export function register(
 }
 
 export const sendOtp = async (mobile: string) => {
-  const url = `http://devapi.checkmeinweb.com/APIv2/OTP/?CountryCode=91&MobileNo=${mobile}`;
+  const url = `https://api.checkmeinweb.com/APIv2/OTP/?CountryCode=91&MobileNo=${mobile}`;
   return axios.get(url);
 }
 
 // Function to verify OTP
-export const verifyOtp = async (mobile: string, otp: string) => {
-  const url = `http://devapi.checkmeinweb.com/APIv2/OTP/auth_OTP_app/index.php?OTP=${otp}&MobileNo=91${mobile}`;
+export const verifyOtp = async ( otp: string,mobile: string) => {
+  const url = `https://api.checkmeinweb.com/APIv2/OTP/auth_OTP_app/index.php?OTP=${otp}&MobileNo=91${mobile}`;
   return axios.get(url);
 }
 

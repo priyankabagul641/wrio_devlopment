@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import * as Yup from 'yup';
 import clsx from 'clsx';
-import { Link } from 'react-router-dom';
-import { useFormik } from 'formik';
-import { sendOtp, verifyOtp, getUserByToken } from '../core/_requests';
-import { useAuth } from '../core/Auth';
 
+import { useFormik } from 'formik';
+import { sendOtp, verifyOtp } from '../core/_requests';
+import { useAuth } from '../core/Auth';
+import { useNavigate } from 'react-router-dom';
 const mobileSchema = Yup.object().shape({
   mobile: Yup.string()
     .matches(/^[0-9]+$/, "Must be only digits")
@@ -17,8 +17,8 @@ const mobileSchema = Yup.object().shape({
 const otpSchema = Yup.object().shape({
   otp: Yup.string()
     .matches(/^[0-9]+$/, "Must be only digits")
-    .min(6, 'Minimum 6 digits')
-    .max(6, 'Maximum 6 digits')
+    .min(4, 'Minimum 4 digits')
+    .max(4, 'Maximum 4 digits')
     .required('OTP is required'),
 });
 
@@ -31,10 +31,11 @@ const initialOtpValues = {
 };
 
 export function Login() {
+  const navigate = useNavigate();   
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [mobile, setMobile] = useState('');
-  const { saveAuth, setCurrentUser } = useAuth();
+  const { saveAuth } = useAuth();
 
   const formikMobile = useFormik({
     initialValues: initialMobileValues,
@@ -63,10 +64,11 @@ export function Login() {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       try {
-        const { data: auth } = await verifyOtp(mobile, values.otp);
+        const { data: auth } = await verifyOtp( values.otp,mobile);
         saveAuth(auth);
-        const { data: user } = await getUserByToken(auth.api_token);
-        setCurrentUser(user);
+        console.log(auth);
+        navigate('/mypage');
+        
       } catch (error) {
         console.error(error);
         saveAuth(undefined);
