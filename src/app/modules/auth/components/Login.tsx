@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import * as Yup from 'yup';
 import clsx from 'clsx';
+
 import { useFormik } from 'formik';
-import { sendOtp, verifyOtp} from '../core/_requests';
+import { sendOtp, verifyOtp } from '../core/_requests';
 import { useAuth } from '../core/Auth';
 import { useNavigate } from 'react-router-dom';
-
 const mobileSchema = Yup.object().shape({
   mobile: Yup.string()
-    .matches(/^[0-9]+$/, 'Must be only digits')
+    .matches(/^[0-9]+$/, "Must be only digits")
     .min(10, 'Minimum 10 digits')
     .max(10, 'Maximum 10 digits')
     .required('Mobile number is required'),
@@ -16,7 +16,7 @@ const mobileSchema = Yup.object().shape({
 
 const otpSchema = Yup.object().shape({
   otp: Yup.string()
-    .matches(/^[0-9]+$/, 'Must be only digits')
+    .matches(/^[0-9]+$/, "Must be only digits")
     .min(4, 'Minimum 4 digits')
     .max(4, 'Maximum 4 digits')
     .required('OTP is required'),
@@ -31,7 +31,7 @@ const initialOtpValues = {
 };
 
 export function Login() {
-  const navigate = useNavigate();
+  const navigate = useNavigate();   
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [mobile, setMobile] = useState('');
@@ -44,6 +44,8 @@ export function Login() {
       setLoading(true);
       try {
         await sendOtp(values.mobile);
+        console.log(values.mobile);
+        
         setMobile(values.mobile);
         setOtpSent(true);
         setLoading(false);
@@ -62,9 +64,11 @@ export function Login() {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       try {
-        const { data: auth } = await verifyOtp(values.otp, mobile);
+        const { data: auth } = await verifyOtp( values.otp,mobile);
         saveAuth(auth);
+        console.log(auth);
         navigate('/mypage');
+        
       } catch (error) {
         console.error(error);
         saveAuth(undefined);
@@ -75,26 +79,15 @@ export function Login() {
     },
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userId = localStorage.getItem('UserId');
-        if (userId) {
-          // const userInfo = await getUserAccountInfo(userId);
-          // Handle user info
-        }
-      } catch (error) {
-        console.error('Failed to fetch user info', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <div className='login-form'>
       {!otpSent ? (
-        <form className='form w-100' onSubmit={formikMobile.handleSubmit} noValidate id='kt_login_send_otp_form'>
+        <form
+          className='form w-100'
+          onSubmit={formikMobile.handleSubmit}
+          noValidate
+          id='kt_login_send_otp_form'
+        >
           <div className='text-center mb-11'>
             <h1 className='text-gray-900 fw-bolder mb-3'>Sign In</h1>
           </div>
@@ -138,7 +131,12 @@ export function Login() {
           </div>
         </form>
       ) : (
-        <form className='form w-100' onSubmit={formikOtp.handleSubmit} noValidate id='kt_login_verify_otp_form'>
+        <form
+          className='form w-100'
+          onSubmit={formikOtp.handleSubmit}
+          noValidate
+          id='kt_login_verify_otp_form'
+        >
           <div className='text-center mb-11'>
             <h1 className='text-gray-900 fw-bolder mb-3'>Verify OTP</h1>
           </div>
@@ -196,6 +194,8 @@ export function Login() {
           </div>
         </form>
       )}
+
+   
     </div>
   );
 }
