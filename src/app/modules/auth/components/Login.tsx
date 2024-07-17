@@ -3,9 +3,10 @@ import * as Yup from 'yup';
 import clsx from 'clsx';
 
 import { useFormik } from 'formik';
-import { sendOtp, verifyOtp } from '../core/_requests';
-import { useAuth } from '../core/Auth';
+import {  sendOtp, verifyOtp } from '../core/_requests';
 import { useNavigate } from 'react-router-dom';
+
+
 const mobileSchema = Yup.object().shape({
   mobile: Yup.string()
     .matches(/^[0-9]+$/, "Must be only digits")
@@ -31,11 +32,11 @@ const initialOtpValues = {
 };
 
 export function Login() {
-  const navigate = useNavigate();   
+
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [mobile, setMobile] = useState('');
-  const { saveAuth } = useAuth();
+  const navigate = useNavigate();
 
   const formikMobile = useFormik({
     initialValues: initialMobileValues,
@@ -64,14 +65,13 @@ export function Login() {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       try {
-        const { data: auth } = await verifyOtp( values.otp,mobile);
-        saveAuth(auth);
+        const { data:auth} = await verifyOtp( values.otp,mobile);
         console.log(auth);
-        navigate('/mypage');
+        navigate('/dashboard'); 
         
       } catch (error) {
         console.error(error);
-        saveAuth(undefined);
+    
         setStatus('OTP verification failed. Please try again.');
         setSubmitting(false);
         setLoading(false);

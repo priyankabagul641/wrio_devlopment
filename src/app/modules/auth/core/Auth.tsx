@@ -31,12 +31,12 @@ const useAuth = () => {
 const AuthProvider: FC<WithChildren> = ({children}) => {
   const [auth, setAuth] = useState<AuthModel | undefined>(authHelper.getAuth())
   const [currentUser, setCurrentUser] = useState<UserModel | undefined>()
-  const saveAuth = (auth: AuthModel | undefined) => {
+  const saveAuth = (auth: AuthModel | any) => {
     setAuth(auth)
     if (auth) {
       authHelper.setAuth(auth)
     } else {
-      authHelper.removeAuth()
+      authHelper.setAuth(auth)
     }
   }
 
