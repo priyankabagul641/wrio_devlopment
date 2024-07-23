@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import * as Yup from 'yup';
-import clsx from 'clsx';
-
 import { useFormik } from 'formik';
-import {  sendOtp, verifyOtp,setVerifiedOTPInfo,clientLogin  } from '../core/_requests';
+import clsx from 'clsx';
+import { sendOtp, verifyOtp, setVerifiedOTPInfo, clientLogin, getUserAcccountInfo } from '../core/_requests';
 import { useNavigate } from 'react-router-dom';
 import useFcmToken from '../core/useFcmToken';
 
@@ -32,7 +31,6 @@ const initialOtpValues = {
 };
 
 export function Login() {
-
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [mobile, setMobile] = useState('');
@@ -48,7 +46,6 @@ export function Login() {
       try {
         await sendOtp(values.mobile);
         console.log(values.mobile);
-        
         setMobile(values.mobile);
         setOtpSent(true);
         setLoading(false);
@@ -67,22 +64,34 @@ export function Login() {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true);
       try {
-        const { data:auth} = await verifyOtp( values.otp,mobile);
+        const { data: auth } = await verifyOtp(values.otp, mobile);
         console.log(auth);
-      if(auth.authenticate){
-        console.log("Enter Room");
-        setVerifiedOTPInfo(values.otp)
-        // let number =mobile;
-        await clientLogin(`${mobile}@deviseapps.com`);
-        navigate('/dashboard'); 
-      }
-else{
-  console.log("InCorreact Otp");
-  
-}   
+        if (auth.authenticate) {
+          console.log("Enter Room");
+          setVerifiedOTPInfo(values.otp);
+          const { data: loginInfo } = await clientLogin(`91${mobile}@deviseapps.com`);
+          console.log(loginInfo);
+          const loginResponse = await clientLogin(`91${mobile}@deviseapps.com`);
+          const auth1 = loginResponse.data;
+          console.log(auth1);
+          if (loginInfo === 'InvalidUser') {
+          
+          } else {
+            const userId = loginInfo.UserId;
+            console.log(userId);
+    console.log("hiii");
+    
+            const { data: userAccountInfo } = await getUserAcccountInfo(userId);
+            console.log(userAccountInfo);
+         
+            navigate('/dashboard');
+          }
+        } else {
+          setStatus('Incorrect OTP');
+          setSubmitting(false);
+        }
       } catch (error) {
         console.error(error);
-    
         setStatus('OTP verification failed. Please try again.');
         setSubmitting(false);
         setLoading(false);
@@ -205,8 +214,6 @@ else{
           </div>
         </form>
       )}
-
-   
     </div>
   );
 }

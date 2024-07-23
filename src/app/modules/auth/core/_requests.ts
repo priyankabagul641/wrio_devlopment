@@ -63,22 +63,27 @@ export const getVerifiedOTPInfo = async () => {
 }
 
 export const clientLogin = async (emailId: any) => {
-  try {
+
     // const fcmToken = localStorage.getItem('FCMToken');
     const fcmToken='c4ycAOwME0Ohm5sYda1dgQ:APA91bECJKU7v4GcuGSWVG4z7xIF317w_saIdCV8Y-C0e-whXE5YlclrT8j3exai3BnkkAMSNc__iaqaBZFQVFIfT3bSlEGOdgsEAr9X9XtmQCcyXxZDXdk-WmrJapM5vq7DpToiFnr5'
     // let deviceOs = localStorage.getItem("currentPlatform");
     let deviceOs = 'Windows Phone'
     const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=ClientLogin&Uname=@&EmailId=${emailId}&DeviceARN=${fcmToken}&DeviceOS=${deviceOs}&FCMToken=${fcmToken}`;
 
-    const response = await axios.get(url);
-    console.log(url);
-    
-    return response.data;
-  } catch (error) {
-    console.error('Error during client login:', error);
-    throw error;
-  }
+    return axios.get(url);
+  
+  
 };
+
+export function getProfiles(userId: number) {
+  const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetProfile&UserId=${userId}`;
+  return axios.get(url);
+}
+
+export function getUserAcccountInfo(userId: number) {
+  const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetUserAccountImage&UserId=${userId}`;
+  return axios.get(url);
+}
 
 export function UserLoginOrRegister(user: UserModel) {
   const url = 'https://api.checkmeinweb.com/APIv2/ClientFunctions.php';
