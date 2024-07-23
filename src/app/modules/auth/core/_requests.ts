@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AuthModel, UserModel } from "./_models";
 
+
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
 export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/verify_token`;
@@ -22,14 +23,12 @@ export function login(email: string, password: string) {
     password,
   });
 }
+
 // Server should return AuthModel
-export function register(
-  mobile: any,
-    otp: any,
-) {
+export function register(mobile: any, otp: any) {
   return axios.post(REGISTER_URL, {
-    mobile:mobile,
-    otp:otp,
+    mobile,
+    otp,
   });
 }
 
@@ -39,12 +38,52 @@ export const sendOtp = async (mobile: string) => {
 }
 
 // Function to verify OTP
-export const verifyOtp = async ( otp: string,mobile: string) => {
+export const verifyOtp = async (otp: string, mobile: string) => {
   const url = `https://api.checkmeinweb.com/APIv2/OTP/auth_OTP_app/index.php?OTP=${otp}&MobileNo=91${mobile}`;
   return axios.get(url);
 }
 
+export const setVerifiedOTPInfo = async (otpInfo: any) => {
+  sessionStorage.setItem('OTPInfo', JSON.stringify(otpInfo));
+}
 
+
+
+export const getVerifiedOTPInfo = async () => {
+  try {
+    const otpInfoString = sessionStorage.getItem('OTPInfo');
+    if (!otpInfoString) {
+      throw new Error('No OTPInfo found in sessionStorage');
+    }
+    return JSON.parse(otpInfoString);
+  } catch (error) {
+    console.error('Error retrieving or parsing OTPInfo:', error);
+    return null; // or handle the error as appropriate for your application
+  }
+}
+
+export const clientLogin = async (emailId: any) => {
+  try {
+    // const fcmToken = localStorage.getItem('FCMToken');
+    const fcmToken='c4ycAOwME0Ohm5sYda1dgQ:APA91bECJKU7v4GcuGSWVG4z7xIF317w_saIdCV8Y-C0e-whXE5YlclrT8j3exai3BnkkAMSNc__iaqaBZFQVFIfT3bSlEGOdgsEAr9X9XtmQCcyXxZDXdk-WmrJapM5vq7DpToiFnr5'
+    // let deviceOs = localStorage.getItem("currentPlatform");
+    let deviceOs = 'Windows Phone'
+    const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=ClientLogin&Uname=@&EmailId=${emailId}&DeviceARN=${fcmToken}&DeviceOS=${deviceOs}&FCMToken=${fcmToken}`;
+
+    const response = await axios.get(url);
+    console.log(url);
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error during client login:', error);
+    throw error;
+  }
+};
+
+export function UserLoginOrRegister(user: UserModel) {
+  const url = 'https://api.checkmeinweb.com/APIv2/ClientFunctions.php';
+  return axios.post(url, user);
+}
 
 
 // Server should return object => { result: boolean } (Is Email in DB)

@@ -3,9 +3,9 @@ import * as Yup from 'yup';
 import clsx from 'clsx';
 
 import { useFormik } from 'formik';
-import {  sendOtp, verifyOtp } from '../core/_requests';
+import {  sendOtp, verifyOtp,setVerifiedOTPInfo,clientLogin  } from '../core/_requests';
 import { useNavigate } from 'react-router-dom';
-
+import useFcmToken from '../core/useFcmToken';
 
 const mobileSchema = Yup.object().shape({
   mobile: Yup.string()
@@ -38,6 +38,8 @@ export function Login() {
   const [mobile, setMobile] = useState('');
   const navigate = useNavigate();
 
+  useFcmToken();
+
   const formikMobile = useFormik({
     initialValues: initialMobileValues,
     validationSchema: mobileSchema,
@@ -67,8 +69,17 @@ export function Login() {
       try {
         const { data:auth} = await verifyOtp( values.otp,mobile);
         console.log(auth);
+      if(auth.authenticate){
+        console.log("Enter Room");
+        setVerifiedOTPInfo(values.otp)
+        // let number =mobile;
+        await clientLogin(`${mobile}@deviseapps.com`);
         navigate('/dashboard'); 
-        
+      }
+else{
+  console.log("InCorreact Otp");
+  
+}   
       } catch (error) {
         console.error(error);
     

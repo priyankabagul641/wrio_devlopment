@@ -43,25 +43,36 @@ export interface UserSocialNetworksModel {
   instagram: string
 }
 
-export interface UserModel {
-  id: number
-  username: string
-  password: string | undefined
-  email: string
-  first_name: string
-  last_name: string
-  fullname?: string
-  occupation?: string
-  companyName?: string
-  phone?: string
-  roles?: Array<number>
-  pic?: string
-  language?: 'en' | 'de' | 'es' | 'fr' | 'ja' | 'zh' | 'ru'
-  timeZone?: string
-  website?: 'https://keenthemes.com'
-  emailSettings?: UserEmailSettingsModel
-  auth?: AuthModel
-  communication?: UserCommunicationModel
-  address?: UserAddressModel
-  socialNetworks?: UserSocialNetworksModel
+// export interface UserModel {
+//   id: number
+//   username: string
+//   password: string | undefined
+//   email: string
+//   first_name: string
+//   last_name: string
+//   fullname?: string
+//   occupation?: string
+//   companyName?: string
+//   phone?: string
+//   roles?: Array<number>
+//   pic?: string
+//   language?: 'en' | 'de' | 'es' | 'fr' | 'ja' | 'zh' | 'ru'
+//   timeZone?: string
+//   website?: 'https://keenthemes.com'
+//   emailSettings?: UserEmailSettingsModel
+//   auth?: AuthModel
+//   communication?: UserCommunicationModel
+//   address?: UserAddressModel
+//   socialNetworks?: UserSocialNetworksModel
+// }
+
+export interface UserModel{
+  UserId: number;
+    Uname: string;
+    EmailId: string;
+    Image: string;
+    DeviceARN: string;
+    DeviceOS: string;
+    UserRole: string;
+    IsFirstTime: boolean;
 }
