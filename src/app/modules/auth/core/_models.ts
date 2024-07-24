@@ -67,12 +67,23 @@ export interface UserSocialNetworksModel {
 // }
 
 export interface UserModel{
+  // UserId: number;
+  //   Uname: string;
+  //   EmailId: string;
+  //   Image: string;
+  //   DeviceARN: string;
+  //   DeviceOS: string;
+  //   UserRole: string;
+  //   IsFirstTime: boolean;
+  _id: { $id: string };
   UserId: number;
-    Uname: string;
-    EmailId: string;
-    Image: string;
-    DeviceARN: string;
-    DeviceOS: string;
-    UserRole: string;
-    IsFirstTime: boolean;
+  UserName: string;
+  EmailId: string;
+  DeviceARN: string;
+  FCMToken: string;
+  DeviceOS: string;
+  UserRole: string;
+  Image: string;
+  Date: string;
+  Time: string;
 }
