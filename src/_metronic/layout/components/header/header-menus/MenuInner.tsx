@@ -11,7 +11,7 @@ export function MenuInner() {
       <MenuItem title=' Activites' to='/builder' />
       {/* <MenuItem title='My Page' to='/my-page' /> */}
       <MenuItem title=' Orders' to='/builder' />
-   
+      <MenuItem title=' Profile' to='/profilePage' />
       {/* <MenuInnerWithSub
         title='Profile'
         to='/crafted'

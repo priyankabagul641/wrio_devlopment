@@ -2,12 +2,9 @@ import {FC} from 'react'
 import {useIntl} from 'react-intl'
 
 import {
-  ListsWidget2,
-  ListsWidget3,
-  ListsWidget4,
-  ListsWidget6,
+
   TablesWidget5,
-  TablesWidget10,
+
   MixedWidget8,
   CardsWidget7,
   CardsWidget17,

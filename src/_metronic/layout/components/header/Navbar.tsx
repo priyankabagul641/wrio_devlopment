@@ -40,9 +40,9 @@ const Navbar = () => {
           <KTIcon iconName='message-text-2' className={btnIconClass} />
           <span className='bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink' />
         </div>
-      </div> */}
+      </div>
 
-      {/* <div className={clsx('app-navbar-item', itemClass)}>
+      <div className={clsx('app-navbar-item', itemClass)}>
         <ThemeModeSwitcher toggleBtnClass={clsx('btn-active-light-primary btn-custom')} />
       </div> */}
 
@@ -53,7 +53,7 @@ const Navbar = () => {
           data-kt-menu-attach='parent'
           data-kt-menu-placement='bottom-end'
         >
-          <img src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-2.webp' alt='' />
+          <img src={toAbsoluteUrl('media/avatars/300-3.jpg')} alt='' />
         </div>
         <HeaderUserMenu />
       </div>
