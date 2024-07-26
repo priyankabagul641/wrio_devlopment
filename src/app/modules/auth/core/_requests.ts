@@ -47,7 +47,23 @@ export const setVerifiedOTPInfo = async (otpInfo: any) => {
   sessionStorage.setItem('OTPInfo', JSON.stringify(otpInfo));
 }
 
+export function search(terminalName: any) {
+  const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=SearchTerminal&SearchString=${terminalName}`;
+  return axios.get(url).then(response => response.data).catch(error => {
+    console.error("Error during search:", error);
+    throw error;
+  });
+}
 
+export function getAll() {
+  const url = `https://api.checkmeinweb.com/APIv2/getAdsSlideShow.php`;
+  return axios.get(url);
+}
+
+export function getrecentsearch(userId: any) {
+  const url = `https://api.checkmeinweb.com/APIv2/getRecentTerminalsForUser.php?UserId=${userId}`;
+  return axios.get(url);
+}
 
 export const getVerifiedOTPInfo = async () => {
   try {
