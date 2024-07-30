@@ -54,7 +54,7 @@ const Navbar = () => {
           data-kt-menu-attach='parent'
           data-kt-menu-placement='bottom-end'
         >
-          <img src={toAbsoluteUrl('media/avatars/300-3.jpg')} alt='' />
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt='' />
         </div>
         <HeaderUserMenu />
       </div>

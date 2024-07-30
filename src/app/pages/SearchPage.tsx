@@ -1,7 +1,8 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SearchComponent } from '../../_metronic/assets/ts/components';
 import { KTIcon } from '../../_metronic/helpers';
-import { search } from '../modules/auth/core/_requests'; // Ensure this path is correct
+import { search,getProductById ,getAccountInfo} from '../modules/auth/core/_requests'; // Ensure this path is correct
 
 const Search: FC = () => {
   const [menuState] = useState<'main' | 'advanced' | 'preferences'>('main');
@@ -13,6 +14,7 @@ const Search: FC = () => {
   const resultsElement = useRef<HTMLDivElement | null>(null);
   const suggestionsElement = useRef<HTMLDivElement | null>(null);
   const emptyElement = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   const processs = (searchComponent: SearchComponent) => {
     const query = (searchComponent.getQuery() || '').trim();
@@ -26,16 +28,16 @@ const Search: FC = () => {
     search(query)
       .then(response => {
         console.log(response);
-        
+
         const results = response.map((item: any) => ({
-            name: item.TerminalName,
-            image: item.Image || 'default-image-url', 
-            wrioCode: item.WrioCode
-          }));
-       
+          name: item.TerminalName,
+          image: item.Image || 'default-image-url',
+          wrioCode: item.WrioCode
+        }));
+
         setSearchResults(results);
         console.log(results);
-        
+
         setError(null);
         setLoading(false);
         if (results.length > 0) {
@@ -72,6 +74,10 @@ const Search: FC = () => {
     searchObject!.on('kt.search.clear', clear);
   }, []);
 
+  const handleResultClick = (wrioCode: string) => {
+    navigate(`/productPage/${wrioCode}`);
+  };
+ 
   return (
     <>
       <div
@@ -154,10 +160,11 @@ const Search: FC = () => {
 
                 {searchResults.length > 0 ? (
                   searchResults.map((result, index) => (
-                    <a
+                    <div
                       key={index}
-                      href='/#'
                       className='d-flex text-gray-900 text-hover-primary align-items-center mb-5'
+                      onClick={() => handleResultClick(result.wrioCode)} // Use onClick for navigation
+                      style={{ cursor: 'pointer' }}
                     >
                       <div className='symbol symbol-40px me-4'>
                         <img src={result.image} alt={result.name} />
@@ -167,7 +174,7 @@ const Search: FC = () => {
                         <span className='fs-6 fw-bold'>{result.name}</span>
                         <span className='fs-7 fw-bold text-muted'>{result.wrioCode}</span>
                       </div>
-                    </a>
+                    </div>
                   ))
                 ) : (
                   <div className='text-center'>

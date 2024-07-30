@@ -54,6 +54,14 @@ export function search(terminalName: any) {
     throw error;
   });
 }
+export function getProductById(wiroid: any) {
+  const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetTerminalFormDetails&TerminalId=${wiroid}`;
+  return axios.get(url);
+}
+export function getAccountInfo(accountId: any) {
+  const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetAccountInfo&AccountId=${accountId}`;
+  return axios.get(url);
+}
 
 export function getAll() {
   const url = `https://api.checkmeinweb.com/APIv2/getAdsSlideShow.php`;

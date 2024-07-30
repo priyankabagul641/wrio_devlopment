@@ -1,4 +1,4 @@
-import {FC} from 'react'
+import {FC, useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import {
@@ -16,14 +16,17 @@ import { ToolbarWrapper } from '../../_metronic/layout/components/toolbar'
 import { Content } from '../../_metronic/layout/components/content'
 import { toAbsoluteUrl } from '../../_metronic/helpers'
 import {PageTitle} from '../../_metronic/layout/core'
+import { CreateAppModal } from '../../_metronic/partials/modals/create-app-stepper/CreateAppModal'
 
 
 
 const DashboardPage: FC = () => (
+  
   <>
     <ToolbarWrapper />
     <Content>
     {/* begin::Row */}
+    
     <div className='row g-5 g-xl-10 mb-5 mb-xl-10'>
       {/* begin::Col */}
       <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10'>
@@ -103,10 +106,19 @@ const DashboardPage: FC = () => (
 )
 
 const MyPage: FC = () => {
+  const [showCreateAppModal, setShowCreateAppModal] = useState<boolean>(false)
   const intl = useIntl()
   return (
     <>
+    <a
+          href='#'
+          onClick={() => setShowCreateAppModal(true)}
+          className='btn btn-sm fw-bold btn-primary'
+        >
+          Create
+        </a>
       <PageTitle breadcrumbs={[]}>{intl.formatMessage({id: 'MENU.DASHBOARD'})}</PageTitle>
+      <CreateAppModal show={showCreateAppModal} handleClose={() => setShowCreateAppModal(false)} />
       <DashboardPage />
     </>
   )
