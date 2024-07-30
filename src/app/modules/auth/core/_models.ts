@@ -87,3 +87,13 @@ export interface UserModel{
   Date: string;
   Time: string;
 }
+
+export interface ICreateAppData {
+  appBasic: {
+    appName: string;
+    appType: 'Quick Online Courses' | 'Face to Face Discussions' | 'Full Intro Training';
+  };
+  appFramework: string;
+  appDatabase: string;
+  appStorage: string;
+}

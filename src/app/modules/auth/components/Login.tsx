@@ -11,6 +11,7 @@ import {
 } from "../core/_requests";
 import { useNavigate } from "react-router-dom";
 import useFcmToken from "../core/useFcmToken";
+import { Registration } from "./Registration";
 
 const mobileSchema = Yup.object().shape({
   mobile: Yup.string()
@@ -37,6 +38,7 @@ const initialOtpValues = {
 };
 
 export function Login() {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [mobile, setMobile] = useState("");
@@ -169,6 +171,10 @@ export function Login() {
               )}
             </button>
           </div>
+          <div>
+      <button onClick={() => setModalIsOpen(true)}>Open Modal</button>
+      <Registration isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} />
+    </div>
         </form>
       ) : (
         <form
