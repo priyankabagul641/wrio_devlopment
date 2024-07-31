@@ -4,7 +4,7 @@ import { ToolbarWrapper } from '../../_metronic/layout/components/toolbar'
 import { Content } from '../../_metronic/layout/components/content'
 import { UserModel } from '../modules/auth'
 import { getProductById  } from '../modules/auth/core/_requests';
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AxiosResponse } from 'axios'
 
 interface Product {
@@ -22,7 +22,7 @@ const ProductPage: FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!id) {
@@ -47,7 +47,10 @@ const ProductPage: FC = () => {
   if (!product) {
     return <div>Product not found</div>;
   }
-
+  const getByProductID = () => {
+   
+    navigate('/orderPage'); // Redirect to login page after logout
+  }
   return (
     <>
       <ToolbarWrapper />
@@ -88,7 +91,7 @@ const ProductPage: FC = () => {
                       </span>
                     </a>
                     <a
-                      href='#'
+                      onClick={getByProductID}
                       className='btn btn-sm btn-primary me-3'
                       data-bs-toggle='modal'
                       data-bs-target='#kt_modal_offer_a_deal'

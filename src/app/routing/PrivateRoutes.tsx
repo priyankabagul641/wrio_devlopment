@@ -8,6 +8,9 @@ import BuilderPageWrapper from '../pages/BuilderPageWrapper'
 import { ProfilePage } from '../pages/ProfilePage'
 import { ProductPage } from '../pages/ProductPage'
 import { OrderformPage } from '../pages/OrderformPage'
+import { PlaceOrderPage } from '../pages/PlaceOrderPage'
+import { Overview } from '../pages/ConfirmPage'
+import { Step5 } from '../pages/ThankyouPage'
 
 const PrivateRoutes: FC = () => {
   // const ProfilePage = lazy(() => import('../pages/ProfilePage'))
@@ -21,6 +24,9 @@ const PrivateRoutes: FC = () => {
         <Route path='profilePage' element={<ProfilePage />} />
         <Route path='productPage/:id' element={<ProductPage />} />
         <Route path='orderPage' element={<OrderformPage />} />
+        <Route path='PlaceOrderPage' element={<PlaceOrderPage />} />
+        <Route path='ConfirmPage' element={<Overview />} />
+        <Route path='ThankYou' element={<Step5 />} />
       </Route>
     </Routes>
   )

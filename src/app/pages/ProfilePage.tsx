@@ -1,11 +1,20 @@
-import  { FC, useEffect, useState } from 'react'
-import { KTIcon} from '../../_metronic/helpers'
+import { FC, useEffect, useState } from 'react'
+import { KTIcon } from '../../_metronic/helpers'
 import { ToolbarWrapper } from '../../_metronic/layout/components/toolbar'
 import { Content } from '../../_metronic/layout/components/content'
+
+import {deleteProfile} from '../modules/auth/core/_requests'
+import { useNavigate } from 'react-router-dom'
 import { UserModel } from '../modules/auth'
+
+// const deleteProfile = (userId: any, Id: any) => {
+//   const url = `https://api.checkmeinweb.com/APIv2/APIv2/ClientFunctions.php?function=DeleteProfile&UserId=${userId}&Id=${Id}`;
+//   return axios.delete(url);
+// };
 
 const ProfilePage: FC = () => {
   const [userInfo, setUserInfo] = useState<UserModel | null>(null)
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUserInfo = sessionStorage.getItem('CurrentUserInfo')
@@ -14,10 +23,28 @@ const ProfilePage: FC = () => {
     }
   }, [])
 
+  const handleDeleteProfile = async () => {
+    if (userInfo) {
+      try {
+        await deleteProfile(userInfo.UserId, userInfo._id.$id);
+        sessionStorage.clear();
+        alert('Profile deleted successfully');
+        navigate('/auth'); // Redirect to login page after deletion
+      } catch (error) {
+        console.error('Error deleting profile:', error);
+    alert('Failed to delete profile');
+      }
+    }
+  }
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    navigate('/auth'); // Redirect to login page after logout
+  }
+
   if (!userInfo) {
     return <div>Loading...</div>
   }
-
 
   return (
     <>
@@ -71,60 +98,20 @@ const ProfilePage: FC = () => {
                   </div>
 
                   <div className='d-flex my-4'>
-                    {/* <a href='#' className='btn btn-sm btn-light me-2' id='kt_user_follow_button'>
+                    <button onClick={handleDeleteProfile} className='btn btn-sm btn-light me-2' id='kt_user_follow_button'>
                       <KTIcon iconName='check' className='fs-3 d-none' />
-
-                      <span className='indicator-label'>Follow</span>
+                      <span className='indicator-label'>Delete</span>
                       <span className='indicator-progress'>
                         Please wait...
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
-                    </a> */}
-                    <a
-                      href='#'
-                      className='btn btn-sm btn-primary me-3'
-                      data-bs-toggle='modal'
-                      data-bs-target='#kt_modal_offer_a_deal'
-                    >
-                     Logout
-                    </a>
-                  
+                    </button>
+                    <button onClick={handleLogout} className='btn btn-sm btn-primary me-3'>
+                      Logout
+                    </button>
                   </div>
 
                 </div>
-
-                {/* <div className='d-flex flex-wrap flex-stack'>
-                  <div className='d-flex flex-column flex-grow-1 pe-8'>
-                    <div className='d-flex flex-wrap'>
-                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
-                        <div className='d-flex align-items-center'>
-                          <KTIcon iconName='arrow-up' className='fs-3 text-success me-2' />
-                          <div className='fs-2 fw-bolder'>4500$</div>
-                        </div>
-
-                        <div className='fw-bold fs-6 text-gray-500'>Earnings</div>
-                      </div>
-
-                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
-                        <div className='d-flex align-items-center'>
-                          <KTIcon iconName='arrow-down' className='fs-3 text-danger me-2' />
-                          <div className='fs-2 fw-bolder'>75</div>
-                        </div>
-
-                        <div className='fw-bold fs-6 text-gray-500'>Projects</div>
-                      </div>
-
-                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
-                        <div className='d-flex align-items-center'>
-                          <KTIcon iconName='arrow-up' className='fs-3 text-success me-2' />
-                          <div className='fs-2 fw-bolder'>60%</div>
-                        </div>
-
-                        <div className='fw-bold fs-6 text-gray-500'>Success Rate</div>
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>

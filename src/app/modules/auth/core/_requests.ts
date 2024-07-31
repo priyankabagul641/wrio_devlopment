@@ -63,6 +63,11 @@ export function getAccountInfo(accountId: any) {
   return axios.get(url);
 }
 
+export function deleteProfile(userId:any,Id: any) {
+  const url = `http://devapi.checkmeinweb.com/APIv2/ClientFunctions.php?function=DeleteProfile&UserId=${userId}&Id=${Id}`;
+  return axios.delete(url);
+}
+
 export function getAll() {
   const url = `https://api.checkmeinweb.com/APIv2/getAdsSlideShow.php`;
   return axios.get(url);
