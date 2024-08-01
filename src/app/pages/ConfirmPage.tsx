@@ -1,14 +1,13 @@
-import {Link} from 'react-router-dom'
-import {KTIcon} from '../../_metronic/helpers'
-import {
-  ChartsWidget1,
-  ListsWidget5,
-  TablesWidget1,
-  TablesWidget5,
-} from '../../_metronic/partials/widgets'
+import { useNavigate} from 'react-router-dom'
+
 import { Content } from '../../_metronic/layout/components/content'
 
 export function Overview() {
+  const navigate = useNavigate();
+  const thankyoupage = () => {
+
+    navigate('/ThankYou'); 
+  }
   return (
     <Content>
       <div className='card mb-5 mb-xl-10' id='kt_profile_details_view'>
@@ -17,9 +16,9 @@ export function Overview() {
             <h3 className='fw-bolder m-0'> Details</h3>
           </div>
 
-          <Link to='/crafted/account/settings' className='btn btn-primary align-self-center'>
+          <button type="submit" id="kt_send_otp_submit"  className='btn btn-primary align-self-center' onClick={thankyoupage}>
            Confirm
-          </Link>
+          </button>
         </div>
 
         <div className='card-body p-9'>

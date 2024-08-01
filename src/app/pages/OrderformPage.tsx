@@ -2,9 +2,15 @@ import { Field, Form, Formik, ErrorMessage } from 'formik';
 import clsx from 'clsx';
 import { FC } from 'react';
 import { Content } from '../../_metronic/layout/components/content';
-
+import { useNavigate } from 'react-router-dom'
 const OrderformPage: FC = () => {
+  const navigate = useNavigate();
+  const placeOrderPage = () => {
+
+    navigate('/PlaceOrderPage'); // Redirect to login page after logout
+  }
   return (
+   
     <Formik
       initialValues={{
         businessName: '',
@@ -20,8 +26,9 @@ const OrderformPage: FC = () => {
       }}
       onSubmit={(values) => {
         console.log(values);
-        // Add your form submission logic here
+     
       }}
+   
     >
       {({ setFieldValue }) => (
          <Content>
@@ -156,7 +163,7 @@ const OrderformPage: FC = () => {
           </div>
           <div className='fw-bold fs-6 text-gray-500'>By clicking on the next button, I agree to share my information to National chikki for demo and <a href="www.customer.wrio.in">www.customer.wrio.in</a> Please refer terms and conditions here</div>
           <div className="d-grid mb-10">
-            <button type="submit" id="kt_send_otp_submit" className="btn btn-primary" >
+            <button type="submit" id="kt_send_otp_submit" className="btn btn-primary" onClick={placeOrderPage}>
               Next
             </button>
           </div>

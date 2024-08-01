@@ -2,10 +2,13 @@ import { FC } from 'react'
 // import { Link } from 'react-router-dom'
 // import { Languages } from './Languages'
 import { toAbsoluteUrl } from '../../../helpers'
+import { useNavigate } from 'react-router-dom';
 
 const HeaderUserMenu: FC = () => {
-  const logout = () => {
-    console.log('User logged out');
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    sessionStorage.clear();
+    navigate('/auth'); // Redirect to login page after logout
   }
 
   const testUser = {
@@ -136,7 +139,7 @@ const HeaderUserMenu: FC = () => {
       </div> */}
 
       <div className='menu-item px-5'>
-        <a onClick={logout} className='menu-link px-5'>
+        <a onClick={handleLogout} className='menu-link px-5'>
           Sign Out
         </a>
       </div>

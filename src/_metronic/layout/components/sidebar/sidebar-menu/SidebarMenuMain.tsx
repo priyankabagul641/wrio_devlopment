@@ -8,14 +8,14 @@ const SidebarMenuMain = () => {
 
   return (
     <>
-      <SidebarMenuItem
+      {/* <SidebarMenuItem
         to='/dashboard'
         icon='element-11'
         title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
         fontIcon='bi-app-indicator'
       />
       <SidebarMenuItem to='/builder' icon='switch' title='Activites' fontIcon='bi-layers' />
-      <SidebarMenuItem to='/my-page' icon='switch' title='Profile' fontIcon='bi-layers' />
+      <SidebarMenuItem to='/my-page' icon='switch' title='Profile' fontIcon='bi-layers' /> */}
       <SidebarMenuItem to='/my-page' icon='switch' title='Help' fontIcon='bi-layers' />
       <SidebarMenuItem to='/my-page' icon='switch' title='Setting' fontIcon='bi-layers' />
       <SidebarMenuItem to='/my-page' icon='switch' title='About Us' fontIcon='bi-layers' />

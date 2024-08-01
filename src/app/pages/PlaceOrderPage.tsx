@@ -1,10 +1,15 @@
 import { FC} from 'react'
 import { KTIcon } from '../../_metronic/helpers'
+import { useNavigate } from 'react-router-dom';
 
 
 
 const PlaceOrderPage: FC = () => {
+  const navigate = useNavigate();
+  const confirmPage = () => {
 
+    navigate('/ConfirmPage'); 
+  }
 
   return (
     <div className="login-form">
@@ -159,7 +164,7 @@ const PlaceOrderPage: FC = () => {
 
     </div>
       <div className="d-grid mb-10">
-      <button type="submit" id="kt_send_otp_submit" className="btn btn-primary">
+      <button type="submit" id="kt_send_otp_submit" className="btn btn-primary" onClick={confirmPage}>
        Checkout
       </button>
     </div>
