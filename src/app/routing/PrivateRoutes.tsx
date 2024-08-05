@@ -11,6 +11,9 @@ import { OrderformPage } from '../pages/OrderformPage'
 import { PlaceOrderPage } from '../pages/PlaceOrderPage'
 import { Overview } from '../pages/ConfirmPage'
 import { Step5 } from '../pages/ThankyouPage'
+import { SettingsPage } from '../pages/SettingPage'
+import { HelpPage } from '../pages/HelpPage'
+import { AboutUsPage } from '../pages/AboutUs'
 
 const PrivateRoutes: FC = () => {
   // const ProfilePage = lazy(() => import('../pages/ProfilePage'))
@@ -27,6 +30,9 @@ const PrivateRoutes: FC = () => {
         <Route path='PlaceOrderPage' element={<PlaceOrderPage />} />
         <Route path='ConfirmPage' element={<Overview />} />
         <Route path='ThankYou' element={<Step5 />} />
+        <Route path='SettingsPage' element={<SettingsPage />} />
+        <Route path='HelpPage' element={<HelpPage />} />
+        <Route path='AboutUsPage' element={<AboutUsPage />} />
       </Route>
     </Routes>
   )

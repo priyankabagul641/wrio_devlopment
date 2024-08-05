@@ -2,7 +2,11 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SearchComponent } from '../../_metronic/assets/ts/components';
 import { KTIcon } from '../../_metronic/helpers';
-import { search,getProductById ,getAccountInfo} from '../modules/auth/core/_requests'; // Ensure this path is correct
+import { search, getrecentsearch} from '../modules/auth/core/_requests'; // Ensure this path is correct
+interface UserAccount {
+  UserRole: string;
+  UserId: number;
+}
 
 const Search: FC = () => {
   const [menuState] = useState<'main' | 'advanced' | 'preferences'>('main');
@@ -15,7 +19,7 @@ const Search: FC = () => {
   const suggestionsElement = useRef<HTMLDivElement | null>(null);
   const emptyElement = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
-
+  const userAccount: UserAccount = JSON.parse(sessionStorage.getItem('CurrentUserInfo') || '{}');
   const processs = (searchComponent: SearchComponent) => {
     const query = (searchComponent.getQuery() || '').trim();
 
@@ -59,6 +63,24 @@ const Search: FC = () => {
       });
   };
 
+  const recentSearchTerminals=async()=>{
+    try{
+const recentResults=await getrecentsearch(userAccount.UserId);
+console.log(recentResults);
+const recentSearchresults = recentResults.data.map((item: any) => ({
+  name: item.TerminalName,
+  image: item.Image || 'default-image-url',
+  wrioCode: item.WrioCode
+}));
+console.log(recentSearchresults);
+
+    }catch(error){
+
+    }finally{
+
+    }
+  }
+
   const clear = () => {
     setSearchResults([]);
     setError(null);
@@ -69,9 +91,15 @@ const Search: FC = () => {
   };
 
   useEffect(() => {
+    recentSearchTerminals()
+  }, []); 
+
+  useEffect(() => {
+
     const searchObject = SearchComponent.createInsance('#kt_header_search');
     searchObject!.on('kt.search.process', processs);
     searchObject!.on('kt.search.clear', clear);
+
   }, []);
 
   const handleResultClick = (wrioCode: string) => {

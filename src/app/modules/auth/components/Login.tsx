@@ -172,7 +172,7 @@ export function Login() {
             </button>
           </div>
           <div>
-      <button onClick={() => setModalIsOpen(true)}>Open Modal</button>
+      <button onClick={() => setModalIsOpen(true)}>SignUp</button>
       <Registration isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} />
     </div>
         </form>

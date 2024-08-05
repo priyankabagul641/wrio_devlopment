@@ -16,9 +16,9 @@ const SidebarMenuMain = () => {
       />
       <SidebarMenuItem to='/builder' icon='switch' title='Activites' fontIcon='bi-layers' />
       <SidebarMenuItem to='/my-page' icon='switch' title='Profile' fontIcon='bi-layers' /> */}
-      <SidebarMenuItem to='/my-page' icon='switch' title='Help' fontIcon='bi-layers' />
-      <SidebarMenuItem to='/my-page' icon='switch' title='Setting' fontIcon='bi-layers' />
-      <SidebarMenuItem to='/my-page' icon='switch' title='About Us' fontIcon='bi-layers' />
+      <SidebarMenuItem to='/HelpPage' icon='switch' title='Help' fontIcon='bi-layers' />
+      <SidebarMenuItem to='/SettingsPage' icon='switch' title='Setting' fontIcon='bi-layers' />
+      <SidebarMenuItem to='/AboutUsPage' icon='switch' title='About Us' fontIcon='bi-layers' />
       {/* +<AsideMenuItem to="/my-page" title="My Page" /> */}
 
       {/* <div className='menu-item'>
