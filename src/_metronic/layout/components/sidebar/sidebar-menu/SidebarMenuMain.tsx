@@ -1,6 +1,6 @@
 import { useIntl } from 'react-intl'
-import { KTIcon } from '../../../../helpers'
-import { SidebarMenuItemWithSub } from './SidebarMenuItemWithSub'
+// import { KTIcon } from '../../../../helpers'
+// import { SidebarMenuItemWithSub } from './SidebarMenuItemWithSub'
 import { SidebarMenuItem } from './SidebarMenuItem'
 
 const SidebarMenuMain = () => {
@@ -8,16 +8,20 @@ const SidebarMenuMain = () => {
 
   return (
     <>
-      <SidebarMenuItem
+      {/* <SidebarMenuItem
         to='/dashboard'
         icon='element-11'
         title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
         fontIcon='bi-app-indicator'
       />
-      <SidebarMenuItem to='/builder' icon='switch' title='Layout Builder' fontIcon='bi-layers' />
-      <SidebarMenuItem to='/my-page' icon='switch' title='My Page' fontIcon='bi-layers' />
+      <SidebarMenuItem to='/builder' icon='switch' title='Activites' fontIcon='bi-layers' />
+      <SidebarMenuItem to='/my-page' icon='switch' title='Profile' fontIcon='bi-layers' /> */}
+      <SidebarMenuItem to='/HelpPage' icon='switch' title='Help' fontIcon='bi-layers' />
+      <SidebarMenuItem to='/SettingsPage' icon='switch' title='Setting' fontIcon='bi-layers' />
+      <SidebarMenuItem to='/AboutUsPage' icon='switch' title='About Us' fontIcon='bi-layers' />
       {/* +<AsideMenuItem to="/my-page" title="My Page" /> */}
-      <div className='menu-item'>
+
+      {/* <div className='menu-item'>
         <div className='menu-content pt-8 pb-2'>
           <span className='menu-section text-muted text-uppercase fs-8 ls-1'>Crafted</span>
         </div>
@@ -115,7 +119,8 @@ const SidebarMenuMain = () => {
           </span>
           <span className='menu-title'>Changelog {import.meta.env.VITE_APP_VERSION}</span>
         </a>
-      </div>
+      </div> */}
+
     </>
   )
 }

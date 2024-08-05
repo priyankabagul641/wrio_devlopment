@@ -1,7 +1,8 @@
 import clsx from 'clsx'
 import {KTIcon, toAbsoluteUrl} from '../../../helpers'
-import {HeaderNotificationsMenu, HeaderUserMenu, Search, ThemeModeSwitcher} from '../../../partials'
+import {HeaderNotificationsMenu, HeaderUserMenu,  ThemeModeSwitcher} from '../../../partials'
 import {useLayout} from '../../core'
+import { Search } from '../../../../app/pages/SearchPage'
 
 const itemClass = 'ms-1 ms-md-4'
 const btnClass =
@@ -17,7 +18,7 @@ const Navbar = () => {
         <Search />
       </div>
 
-      <div className={clsx('app-navbar-item', itemClass)}>
+      {/* <div className={clsx('app-navbar-item', itemClass)}>
         <div id='kt_activities_toggle' className={btnClass}>
           <KTIcon iconName='chart-simple' className={btnIconClass} />
         </div>
@@ -44,7 +45,7 @@ const Navbar = () => {
 
       <div className={clsx('app-navbar-item', itemClass)}>
         <ThemeModeSwitcher toggleBtnClass={clsx('btn-active-light-primary btn-custom')} />
-      </div>
+      </div> */}
 
       <div className={clsx('app-navbar-item', itemClass)}>
         <div
@@ -53,7 +54,7 @@ const Navbar = () => {
           data-kt-menu-attach='parent'
           data-kt-menu-placement='bottom-end'
         >
-          <img src={toAbsoluteUrl('media/avatars/300-3.jpg')} alt='' />
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt='' />
         </div>
         <HeaderUserMenu />
       </div>

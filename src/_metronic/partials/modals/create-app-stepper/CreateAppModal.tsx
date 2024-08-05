@@ -101,6 +101,7 @@ const CreateAppModal = ({show, handleClose}: Props) => {
         <div className='btn btn-sm btn-icon btn-active-color-primary' onClick={handleClose}>
           <KTIcon className='fs-1' iconName='cross' />
         </div>
+        
         {/* end::Close */}
       </div>
 

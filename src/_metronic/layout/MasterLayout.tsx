@@ -1,7 +1,7 @@
 import {useEffect} from 'react'
 import {Outlet, useLocation} from 'react-router-dom'
 import {HeaderWrapper} from './components/header'
-import {RightToolbar} from '../partials/layout/RightToolbar'
+// import {RightToolbar} from '../partials/layout/RightToolbar'
 import {ScrollTop} from './components/scroll-top'
 import {FooterWrapper} from './components/footer'
 import {Sidebar} from './components/sidebar'
@@ -26,7 +26,7 @@ const MasterLayout = () => {
               <div className='d-flex flex-column flex-column-fluid'>
                 <Outlet />
               </div>
-              <FooterWrapper />
+              {/* <FooterWrapper /> */}
             </div>
           </div>
         </div>
@@ -34,7 +34,7 @@ const MasterLayout = () => {
 
       {/* begin:: Drawers */}
       <ActivityDrawer />
-      <RightToolbar />
+      {/* <RightToolbar /> */}
       <DrawerMessenger />
       {/* end:: Drawers */}
 

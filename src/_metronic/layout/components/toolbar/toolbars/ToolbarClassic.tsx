@@ -14,7 +14,7 @@ const ToolbarClassic = () => {
 
   return (
     <div className='d-flex align-items-center gap-2 gap-lg-3'>
-      {config.app?.toolbar?.filterButton && (
+      {/* {config.app?.toolbar?.filterButton && (
         <div className='m-0'>
           <a
             href='#'
@@ -27,7 +27,7 @@ const ToolbarClassic = () => {
           </a>
           <Dropdown1 />
         </div>
-      )}
+      )} */}
 
       {config.app?.toolbar?.daterangepickerButton && (
         <div
@@ -43,7 +43,7 @@ const ToolbarClassic = () => {
         </div>
       )}
 
-      {config.app?.toolbar?.secondaryButton && (
+      {/* {config.app?.toolbar?.secondaryButton && (
         <a href='#' className='btn btn-sm btn-flex btn-light fw-bold'>
           Filter
         </a>
@@ -55,9 +55,9 @@ const ToolbarClassic = () => {
           onClick={() => setShowCreateAppModal(true)}
           className='btn btn-sm fw-bold btn-primary'
         >
-          Create
+          data
         </a>
-      )}
+      )} */}
       <CreateAppModal show={showCreateAppModal} handleClose={() => setShowCreateAppModal(false)} />
     </div>
   )
