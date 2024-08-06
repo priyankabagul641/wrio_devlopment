@@ -1,256 +1,217 @@
-import clsx from 'clsx'
-import {useState} from 'react'
-import {KTIcon, toAbsoluteUrl} from '../../_metronic/helpers'
-import {getLayoutFromLocalStorage, ILayout, LayoutSetup} from '../../_metronic/layout/core'
-import { ToolbarWrapper } from '../../_metronic/layout/components/toolbar'
-import { Content } from '../../_metronic/layout/components/content'
-import { ListsWidget3, TablesWidget10 } from '../../_metronic/partials/widgets'
-import { Dropdown1 } from '../../_metronic/partials'
 
+import { ToolbarWrapper } from '../../_metronic/layout/components/toolbar';
+import { Content } from '../../_metronic/layout/components/content';
+import React, { useState } from 'react';
+import { getUserCheckInLog } from '../modules/auth/core/_requests';
+
+// Define the expected shape of the log data
+interface LogData {
+  ProductName: string;
+  totalItems: number;
+  Total: number;
+  Date: string;
+  BussinessName: string;
+  WrioCode: string;
+  TokenId: any;
+  TerminalImage: any;
+  CheckedIn: any;
+  'Check In Time': string; // Add any other properties from your response
+}
+
+interface UserAccount {
+  UserRole: string;
+  UserId: number;
+}
+
+type StatusKey = 'N' | 'C' | 'CO' | 'CN' | 'DP' | 'AT' | 'RD' | 'PU' | 'NO';
+
+// Component for displaying the check-in status
+const CheckInStatus: React.FC<{ status: StatusKey }> = ({ status }) => {
+  const statusMap: Record<StatusKey, { color: string; label: string }> = {
+    N: { color: 'orange', label: 'Waiting' },
+    C: { color: 'red', label: 'Cancelled' },
+    CO: { color: 'green', label: 'Completed' },
+    CN: { color: 'purple', label: 'Confirmed' },
+    DP: { color: 'darkblue', label: 'Dispatched' },
+    AT: { color: 'green', label: 'Attended' },
+    RD: { color: 'orange', label: 'Ready for Delivery' },
+    PU: { color: 'lightgreen', label: 'Ready for Pickup' },
+    NO: { color: 'red', label: 'No Order' },
+  };
+
+  const { color, label } = statusMap[status] || { color: 'gray', label: 'Unknown' };
+
+  return <span style={{ fontSize: 'smaller', color }}>{label}</span>;
+};
 
 const BuilderPage: React.FC = () => {
-  const [tab, setTab] = useState('Sidebar')
-  const [config, setConfig] = useState<ILayout>(getLayoutFromLocalStorage())
-  const [configLoading, setConfigLoading] = useState<boolean>(false)
-  const [resetLoading, setResetLoading] = useState<boolean>(false)
-  const [searchTerm, setSearchTerm] = useState<string>('')
-  // const updateConfig = () => {
-  //   setConfigLoading(true)
-  //   try {
-  //     LayoutSetup.setConfig(config)
-  //     window.location.reload()
-  //   } catch (error) {
-  //     setConfig(getLayoutFromLocalStorage())
-  //     setConfigLoading(false)
-  //   }
-  // }
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [viewLogList, setViewLogList] = useState<LogData[]>([]);
+  const [total, setTotal] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
+  // Parse user information from sessionStorage
+  const userAccount: UserAccount = JSON.parse(sessionStorage.getItem('CurrentUserInfo') || '{}');
 
-  // const reset = () => {
-  //   setResetLoading(true)
-  //   setTimeout(() => {
-  //     setConfig(getLayoutFromLocalStorage())
-  //     setResetLoading(false)
-  //   }, 1000)
-  // }
+  const parseViewLog = async () => {
+    const tempEndDate = new Date(endDate);
+    const tempStartDate = new Date(startDate);
+    const timeDiff = Math.abs(tempEndDate.getTime() - tempStartDate.getTime());
+    const dateDifference = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    console.log('dateDifference - ', dateDifference);
+
+    if (startDate && endDate && dateDifference <= 31) {
+      console.log('Loading');
+
+      const formattedStartDate = startDate.split('T')[0];
+      const formattedEndDate = endDate.split('T')[0];
+
+      console.log('Start Date - ', formattedStartDate);
+      console.log('End Date - ', formattedEndDate);
+
+      try {
+        const response = await getUserCheckInLog(userAccount.UserId, formattedStartDate, formattedEndDate);
+
+        console.log('User products response:', response);
+
+        let totalAmount = 0;
+        if (response.data === 'User Log not found') {
+          setViewLogList([]);
+          setTotal(0);
+          setErrorMessage('Products are not found.'); // Set error message
+        }else
+        if (Array.isArray(response.data)) {
+          setViewLogList(response.data);
+          response.data.forEach((element: LogData) => {
+            console.log('total', element.Total);
+            console.log('Check In Time in Log -', element['Check In Time']);
+
+            if (element.Total > 0) {
+              totalAmount += Number(element.Total.toFixed(2));
+              totalAmount = Number(totalAmount.toFixed(2));
+            }
+          });
+        } else {
+          setViewLogList([]);
+          totalAmount = 0;
+        }
+
+        setTotal(totalAmount);
+        console.log('viewlog', response.data);
+        console.log('finaltotal', totalAmount);
+      } catch (error) {
+        console.error('Error fetching logs', error);
+        // You might want to show an alert or toast here
+      }
+    } else {
+      console.log('Difference of dates cannot be more than 30 days.');
+    }
+  };
 
   return (
     <>
       <ToolbarWrapper />
       <Content>
-      <div className='row gy-5 gx-xl-8'>
-    
-      <div className='col-xl-8'>
-        {/* <TablesWidget10 className='card-xxl-stretch mb-5 mb-xl-8' /> */}
-        <div className='card card-xxl-stretch mb-5 mb-xl-8'>
-      {/* begin::Header */}
-      <div className='card-header border-0 pt-5'>
-      <div className='card-title'>
-      {/* begin::Search */}
-      <div className='d-flex align-items-center position-relative my-1'>
-        <KTIcon iconName='magnifier' className='fs-1 position-absolute ms-6' />
-        <input
-          type='text'
-          data-kt-user-table-filter='search'
-          className='form-control form-control-solid w-250px ps-14'
-          placeholder='Search user'
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-
-      {/* end::Search */}
-    </div>
-    <div className='card-toolbar'>
-                  <div className='me-n3'>
-                    <button
-                      className='btn btn-sm btn-icon btn-active-light-primary'
-                      data-kt-menu-trigger='click'
-                      data-kt-menu-placement='bottom-end'
-                      data-kt-menu-flip='top-end'
+        <div className="row gy-5 gx-xl-10">
+          <div className="col-xl-10">
+            <div className="card card-xxl-stretch mb-5 mb-xl-10">
+              {/* <div className="card-header border-0 pt-5">
+                <div className="card-title"> */}
+                   {/* <div className='flex-grow-1'> */}
+          
+                <div className="row d-flex flex-wrap mt-2 p-3">
+                <div className='col-sm-12 col-xl-4'>
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="form-control form-control-solid "
+                      placeholder="Start Date"
+                    />
+                  </div>
+                  <div className="col-sm-12 col-xl-4">
+                  <input
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="form-control form-control-solid  "
+                      placeholder="End Date"
+                    />
+                  </div>
+                  <div className="col-sm-12 col-xl-4">
+                  <button
+                      className="btn btn-md btn-primary  "
+                      data-kt-menu-trigger="click"
+                      data-kt-menu-placement="bottom-end"
+                      data-kt-menu-flip="top-end"
+                      onClick={parseViewLog}
                     >
-                      <i className='bi bi-three-dots fs-2'></i>
+                      Submit
                     </button>
-                    <Dropdown1 />
                   </div>
                 </div>
-
-        <div
-          className='card-toolbar'
-          data-bs-toggle='tooltip'
-          data-bs-placement='top'
-          data-bs-trigger='hover'
-          title='Click to add a user'
-        >
-         
+                
+                  {/* </div> */}
+              
+                 
+                {/* </div>
+              </div> */}
+              <div className="card-body py-3">
+                <div className="table-responsive">
+                {errorMessage ? ( // Conditionally render error message
+                    <div className="alert alert-warning">{errorMessage}</div>
+                  ) : (
+                  <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                    <thead>
+                      <tr className="fw-bold text-muted">
+                        <th className="min-w-150px">Product</th>
+                        <th className="min-w-140px">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {viewLogList.map((log, index) => (
+                        <tr key={index}>
+                          <td>
+                            <div className="d-flex align-items-center">
+                              <div className="symbol symbol-45px me-5">
+                                <img src={log.TerminalImage} alt="Terminal" />
+                              </div>
+                              <div className="d-flex justify-content-start flex-column">
+                                <a className="text-gray-900 fw-bold text-hover-primary fs-6">
+                                  {log.BussinessName}
+                                </a>
+                                <span className="text-muted fw-semibold text-muted d-block fs-7">
+                                  {log.totalItems} quantity
+                                </span>
+                                <span className="text-muted fw-semibold text-muted d-block fs-7">
+                                  {log.WrioCode} - {log.TokenId}
+                                </span>
+                                <CheckInStatus status={log.CheckedIn} />
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <a className="text-gray-900 fw-bold text-hover-primary d-block fs-6">
+                              Total: {log.Total}
+                            </a>
+                            <span className="text-muted fw-semibold text-muted d-block fs-7">
+                              {log['Check In Time']}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      {/* end::Header */}
-      {/* begin::Body */}
-      <div className='card-body py-3'>
-        {/* begin::Table container */}
-        <div className='table-responsive'>
-          {/* begin::Table */}
-          <table className='table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4'>
-            {/* begin::Table head */}
-            <thead>
-              <tr className='fw-bold text-muted'>
-              
-                <th className='min-w-150px'>Product</th>
-                <th className='min-w-140px'>Date</th>
-              
-              </tr>
-            </thead>
-            {/* end::Table head */}
-            {/* begin::Table body */}
-            <tbody>
-              <tr>
-              
-                <td>
-                  <div className='d-flex align-items-center'>
-                    <div className='symbol symbol-45px me-5'>
-                      <img src={toAbsoluteUrl('media/avatars/300-14.jpg')} alt='' />
-                    </div>
-                    <div className='d-flex justify-content-start flex-column'>
-                      <a href='#' className='text-gray-900 fw-bold text-hover-primary fs-6'>
-                        Ana Simmons
-                      </a>
-                      <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                      1 quantity
-                      </span>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <a href='#' className='text-gray-900 fw-bold text-hover-primary d-block fs-6'>
-                    Total : 166.50
-                  </a>
-                  <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                31 july 2024
-                  </span>
-                </td>
-              
-              </tr>
-              <tr>
-                
-                <td>
-                  <div className='d-flex align-items-center'>
-                    <div className='symbol symbol-45px me-5'>
-                      <img src={toAbsoluteUrl('media/avatars/300-2.jpg')} alt='' />
-                    </div>
-                    <div className='d-flex justify-content-start flex-column'>
-                      <a href='#' className='text-gray-900 fw-bold text-hover-primary fs-6'>
-                        Jessie Clarcson
-                      </a>
-                      <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                        C#, ASP.NET, MS SQL
-                      </span>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <a href='#' className='text-gray-900 fw-bold text-hover-primary d-block fs-6'>
-                    Agoda
-                  </a>
-                  <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                    Houses &amp; Hotels
-                  </span>
-                </td>
-              
-              </tr>
-              <tr>
-                
-                <td>
-                  <div className='d-flex align-items-center'>
-                    <div className='symbol symbol-45px me-5'>
-                      <img src={toAbsoluteUrl('media/avatars/300-5.jpg')} alt='' />
-                    </div>
-                    <div className='d-flex justify-content-start flex-column'>
-                      <a href='#' className='text-gray-900 fw-bold text-hover-primary fs-6'>
-                        Lebron Wayde
-                      </a>
-                      <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                        PHP, Laravel, VueJS
-                      </span>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <a href='#' className='text-gray-900 fw-bold text-hover-primary d-block fs-6'>
-                    RoadGee
-                  </a>
-                  <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                    Transportation
-                  </span>
-                </td>
-             
-              </tr>
-              <tr>
-                
-                <td>
-                  <div className='d-flex align-items-center'>
-                    <div className='symbol symbol-45px me-5'>
-                      <img src={toAbsoluteUrl('media/avatars/300-20.jpg')} alt='' />
-                    </div>
-                    <div className='d-flex justify-content-start flex-column'>
-                      <a href='#' className='text-gray-900 fw-bold text-hover-primary fs-6'>
-                        Natali Goodwin
-                      </a>
-                      <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                        Python, PostgreSQL, ReactJS
-                      </span>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <a href='#' className='text-gray-900 fw-bold text-hover-primary d-block fs-6'>
-                    The Hill
-                  </a>
-                  <span className='text-muted fw-semibold text-muted d-block fs-7'>Insurance</span>
-                </td>
-               
-              </tr>
-              <tr>
-               
-                <td>
-                  <div className='d-flex align-items-center'>
-                    <div className='symbol symbol-45px me-5'>
-                      <img src={toAbsoluteUrl('media/avatars/300-23.jpg')} alt='' />
-                    </div>
-                    <div className='d-flex justify-content-start flex-column'>
-                      <a href='#' className='text-gray-900 fw-bold text-hover-primary fs-6'>
-                        Kevin Leonard
-                      </a>
-                      <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                        HTML, JS, ReactJS
-                      </span>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <a href='#' className='text-gray-900 fw-bold text-hover-primary d-block fs-6'>
-                    RoadGee
-                  </a>
-                  <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                    Art Director
-                  </span>
-                </td>
-                
-              </tr>
-            </tbody>
-            {/* end::Table body */}
-          </table>
-          {/* end::Table */}
-        </div>
-        {/* end::Table container */}
-      </div>
-      {/* begin::Body */}
-    </div>
-      </div>
-    </div>
-       
       </Content>
     </>
-  )
-}
+  );
+};
 
-export {BuilderPage}
+export { BuilderPage };
