@@ -37,7 +37,7 @@ const initialOtpValues = {
   otp: "",
 };
 
-export function Login() {
+const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -95,7 +95,8 @@ export function Login() {
             console.log(userAccountInfo);
             const infoUser = userAccountInfo.data[0];
             sessionStorage.setItem("CurrentUserInfo", JSON.stringify(infoUser));
-            navigate("/dashboard");
+            // navigate("/dashboard");
+            onSuccess(); 
           }
         } else {
           setStatus("Incorrect OTP");
@@ -248,3 +249,4 @@ export function Login() {
     </div>
   );
 }
+export  {Login};
