@@ -82,6 +82,11 @@ export function getrecentsearch(userId: any) {
   return axios.get(url);
 }
 
+export function getUserCheckInLog(userId: any,startDate:any,endDate:any) {
+  const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetUserCheckInLog&UserId=${userId}&StartDate=${startDate}&EndDate=${endDate}`;
+  return axios.get(url);
+}
+
 export const getVerifiedOTPInfo = async () => {
   try {
     const otpInfoString = sessionStorage.getItem('OTPInfo');

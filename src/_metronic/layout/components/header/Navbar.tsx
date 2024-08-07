@@ -3,7 +3,10 @@ import {KTIcon, toAbsoluteUrl} from '../../../helpers'
 import {HeaderNotificationsMenu, HeaderUserMenu,  ThemeModeSwitcher} from '../../../partials'
 import {useLayout} from '../../core'
 import { Search } from '../../../../app/pages/SearchPage'
-
+interface UserAccount {
+  Image: string;
+  UserId: number;
+}
 const itemClass = 'ms-1 ms-md-4'
 const btnClass =
   'btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px'
@@ -11,6 +14,7 @@ const userAvatarClass = 'symbol-35px'
 const btnIconClass = 'fs-2'
 
 const Navbar = () => {
+  const userAccount: UserAccount = JSON.parse(sessionStorage.getItem('CurrentUserInfo') || '{}');
   const {config} = useLayout()
   return (
     <div className='app-navbar flex-shrink-0'>
@@ -54,7 +58,7 @@ const Navbar = () => {
           data-kt-menu-attach='parent'
           data-kt-menu-placement='bottom-end'
         >
-          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt='' />
+          <img src={userAccount.Image} alt='' />
         </div>
         <HeaderUserMenu />
       </div>
