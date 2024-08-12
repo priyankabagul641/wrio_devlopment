@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AuthModel, UserModel } from "./_models";
+import { AuthModel, User, UserModel } from "./_models";
 
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
@@ -46,6 +46,9 @@ export const verifyOtp = async (otp: string, mobile: string) => {
 export const setVerifiedOTPInfo = async (otpInfo: any) => {
   sessionStorage.setItem('OTPInfo', JSON.stringify(otpInfo));
 }
+export const setMobileNo = async (no: any) => {
+  sessionStorage.setItem('MobileNo', JSON.stringify(no));
+}
 
 export function search(terminalName: any) {
   const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=SearchTerminal&SearchString=${terminalName}`;
@@ -64,8 +67,9 @@ export function getAccountInfo(accountId: any) {
 }
 
 export function deleteProfile(userId:any,Id: any) {
-  const url = `http://devapi.checkmeinweb.com/APIv2/ClientFunctions.php?function=DeleteProfile&UserId=${userId}&Id=${Id}`;
-  return axios.delete(url);
+  // const url = `http://devapi.checkmeinweb.com/APIv2/ClientFunctions.php?function=DeleteProfile&UserId=${userId}&Id=${Id}`;
+  const url=`https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=DeleteProfile&UserId=${userId}&Id=${Id}`
+  return axios.get(url);
 }
 
 export function getAll() {
@@ -127,7 +131,24 @@ export function UserLoginOrRegister(user: UserModel) {
   const url = 'https://api.checkmeinweb.com/APIv2/ClientFunctions.php';
   return axios.post(url, user);
 }
+export function UserRegisterIn(user: User) {
+  const url = 'https://api.checkmeinweb.com/APIv2/ClientFunctions.php';
+  return axios.post(url, user);
+}
+export function UserRegister (user: User) {
 
+  const body = new FormData();
+  body.append('function', 'UserLoginOrRegister');
+  body.append('Uname', user.Uname);
+  body.append('EmailId', user.EmailId);
+  body.append('Image', user.Image);
+  body.append('DeviceARN', user.DeviceARN);
+  body.append('DeviceOS', user.DeviceOS);
+  body.append('UserRole', user.UserRole);
+
+  const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php`;
+  return axios.post(url, user);
+};
 
 // Server should return object => { result: boolean } (Is Email in DB)
 export function requestPassword(email: string) {

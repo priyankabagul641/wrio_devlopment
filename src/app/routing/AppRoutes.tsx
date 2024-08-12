@@ -18,7 +18,7 @@ const AppRoutes: FC = () => {
           <Route path="/" element={<Navigate to={isAuthenticated ? '/dashboard' : 'auth/login'} />} />
           <Route path="logout" element={<Logout />} />
           <Route path="auth/*" element={<AuthPage />} />
-          <Route path="*" element={isAuthenticated ? <PrivateRoutes /> : <Navigate to="auth/login" />} />
+          <Route path="*" element={isAuthenticated ? <PrivateRoutes /> : <Navigate to="/dashboard" />} />
           <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "auth/login"} />} />
         </Route>
       </Routes>

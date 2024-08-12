@@ -97,3 +97,15 @@ export interface ICreateAppData {
   appDatabase: string;
   appStorage: string;
 }
+
+export interface User {
+  function:string,
+
+  Uname: string;
+  EmailId: string;
+  Image: string;
+  DeviceARN: string;
+  DeviceOS: string;
+  UserRole: string;
+  IsFirstTime: boolean;
+}

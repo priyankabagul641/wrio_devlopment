@@ -1,18 +1,13 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
-import {
-  sendOtp,
-  verifyOtp,
-  setVerifiedOTPInfo,
-  clientLogin,
-  getUserAcccountInfo,
-} from "../core/_requests";
+import { sendOtp, verifyOtp, setVerifiedOTPInfo, clientLogin, getUserAcccountInfo } from "../core/_requests";
 import { useNavigate } from "react-router-dom";
 import useFcmToken from "../core/useFcmToken";
 import { Registration } from "./Registration";
 
+// Validation schemas
 const mobileSchema = Yup.object().shape({
   mobile: Yup.string()
     .matches(/^[0-9]+$/, "Must be only digits")
@@ -53,13 +48,12 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
       setLoading(true);
       try {
         await sendOtp(values.mobile);
-        console.log(values.mobile);
         setMobile(values.mobile);
         setOtpSent(true);
-        setLoading(false);
       } catch (error) {
         console.error(error);
         setStatus("Failed to send OTP. Please try again.");
+      } finally {
         setSubmitting(false);
         setLoading(false);
       }
@@ -73,38 +67,27 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
       setLoading(true);
       try {
         const { data: auth } = await verifyOtp(values.otp, mobile);
-        console.log(auth);
         if (auth.authenticate) {
-          console.log("Enter Room");
           setVerifiedOTPInfo(values.otp);
-          const { data: loginInfo } = await clientLogin(
-            `91${mobile}@deviseapps.com`
-          );
-          console.log(loginInfo);
-          const loginResponse = await clientLogin(`91${mobile}@deviseapps.com`);
-          const auth1 = loginResponse.data;
-          console.log(auth1);
-          sessionStorage.setItem("loginData", JSON.stringify(auth1));
+          sessionStorage.setItem("email", JSON.stringify(mobile));
+          const { data: loginInfo } = await clientLogin(`91${mobile}@deviseapps.com`);
+          sessionStorage.setItem("loginData", JSON.stringify(loginInfo));
           if (loginInfo === "InvalidUser") {
+            setModalIsOpen(true); // Open registration modal for new users
           } else {
             const userId = loginInfo.UserId;
-            console.log(userId);
-            console.log("hiii");
-
-            const userAccountInfo = await getUserAcccountInfo(userId);
-            console.log(userAccountInfo);
-            const infoUser = userAccountInfo.data[0];
-            sessionStorage.setItem("CurrentUserInfo", JSON.stringify(infoUser));
-            // navigate("/dashboard");
-            onSuccess(); 
+            const { data: userAccountInfo } = await getUserAcccountInfo(userId);
+            sessionStorage.setItem("CurrentUserInfo", JSON.stringify(userAccountInfo[0]));
+            onSuccess();
+            navigate("/dashboard");
           }
         } else {
           setStatus("Incorrect OTP");
-          setSubmitting(false);
         }
       } catch (error) {
         console.error(error);
         setStatus("OTP verification failed. Please try again.");
+      } finally {
         setSubmitting(false);
         setLoading(false);
       }
@@ -134,12 +117,10 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
               className={clsx(
                 "form-control bg-transparent",
                 {
-                  "is-invalid":
-                    formikMobile.touched.mobile && formikMobile.errors.mobile,
+                  "is-invalid": formikMobile.touched.mobile && formikMobile.errors.mobile,
                 },
                 {
-                  "is-valid":
-                    formikMobile.touched.mobile && !formikMobile.errors.mobile,
+                  "is-valid": formikMobile.touched.mobile && !formikMobile.errors.mobile,
                 }
               )}
               type="text"
@@ -162,20 +143,13 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
             >
               {!loading && <span className="indicator-label">Send OTP</span>}
               {loading && (
-                <span
-                  className="indicator-progress"
-                  style={{ display: "block" }}
-                >
+                <span className="indicator-progress" style={{ display: "block" }}>
                   Please wait...
                   <span className="spinner-border spinner-border-sm align-middle ms-2"></span>
                 </span>
               )}
             </button>
           </div>
-          <div>
-      <button onClick={() => setModalIsOpen(true)}>SignUp</button>
-      <Registration isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} />
-    </div>
         </form>
       ) : (
         <form
@@ -189,9 +163,7 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
           </div>
 
           <div className="fv-row mb-8">
-            <label className="form-label fs-6 fw-bolder text-gray-900">
-              OTP
-            </label>
+            <label className="form-label fs-6 fw-bolder text-gray-900">OTP</label>
             <input
               placeholder="OTP"
               {...formikOtp.getFieldProps("otp")}
@@ -220,10 +192,7 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
             >
               {!loading && <span className="indicator-label">Verify OTP</span>}
               {loading && (
-                <span
-                  className="indicator-progress"
-                  style={{ display: "block" }}
-                >
+                <span className="indicator-progress" style={{ display: "block" }}>
                   Please wait...
                   <span className="spinner-border spinner-border-sm align-middle ms-2"></span>
                 </span>
@@ -246,7 +215,14 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
           </div>
         </form>
       )}
+
+      {/* Registration Modal */}
+      <Registration
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+      />
     </div>
   );
-}
-export  {Login};
+};
+
+export { Login };

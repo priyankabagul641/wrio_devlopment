@@ -4,6 +4,9 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import clsx from 'clsx';
 import { KTIcon } from '../../../../_metronic/helpers';
+import { UserLoginOrRegister, UserRegister, UserRegisterIn,getUserAcccountInfo } from "../core/_requests";
+import { User } from '../core/_models';
+import { useNavigate } from 'react-router-dom';
 
 interface RegistrationProps {
   isOpen: boolean;
@@ -13,153 +16,116 @@ interface RegistrationProps {
 Modal.setAppElement('#root');
 
 const Registration: React.FC<RegistrationProps> = ({ isOpen, onRequestClose }) => {
+  const navigate = useNavigate();
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    appType: Yup.string().oneOf([
-      'Customer',
-      'Retailer',
-      'Salesman'
-    ], 'Role is required').required('Role is required')
+    appType: Yup.string().oneOf(['CU', 'RT', 'SM'], 'Role is required').required('Role is required')
   });
+
+  const handleSubmit = async (values: { name: string; appType: string }, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
+   const no= JSON.parse(sessionStorage.getItem('email')|| '{}')
+
+    try {
+      const user: User ={
+        function: 'UserLoginOrRegister',
+        Uname: values.name,
+        EmailId:`91${no}@deviseapps.com`,
+        Image: 'http://cdn2.itpro.co.uk/sites/itpro/files/styles/article_main_wide_image/public/2018/01/android_vs_ios.jpg?itok=TsCRWKWY',
+        DeviceARN: 'c4ycAOwME0Ohm5sYda1dgQ:APA91bECJKU7v4GcuGSWVG4z7xIF317w_saIdCV8Y-C0e-whXE5YlclrT8j3exai3BnkkAMSNc__iaqaBZFQVFIfT3bSlEGOdgsEAr9X9XtmQCcyXxZDXdk-WmrJapM5vq7DpToiFnr5',
+        DeviceOS: 'Windows Phone',
+        UserRole: values.appType,
+        IsFirstTime: false
+      };
+console.log(user);
+
+      const { data: loginInfo } = await UserRegisterIn(user);
+      
+      if (loginInfo) {
+        alert('Registration successful!');
+        onRequestClose();
+        navigate("/dashboard");
+        const userId = loginInfo.UserId;
+        const { data: userAccountInfo } = await getUserAcccountInfo(userId);
+        sessionStorage.setItem("CurrentUserInfo", JSON.stringify(userAccountInfo[0]));
+      } else {
+        alert('Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('An error occurred during registration.');
+    }
+
+    setSubmitting(false);
+  };
 
   return (
     <div className="login-form">
-       <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel="Registration Modal">
-       <div className='btn btn-sm btn-icon btn-active-color-primary' onClick={onRequestClose} >
-          <KTIcon className='fs-1' iconName='cross' />
-        </div>
+      <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel="Registration Modal">
         <Formik
-          initialValues={{ name: '', appType: '' }}
-          validationSchema={validationSchema}
-          onSubmit={(values) => {
-            console.log(values);
-            onRequestClose(); // Close the modal on submit
+          initialValues={{
+            name: '',
+            appType: '',
           }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
         >
-          {({ setFieldValue, values }) => (
-            <Form className="form w-100" noValidate id="kt_login_send_otp_form">
+          {({ errors, touched, isSubmitting }) => (
+            <Form className="form w-100">
               <div className="text-center mb-11">
-                <h1 className="text-gray-900 fw-bolder mb-3">Sign Up</h1>
+                <h1 className="text-gray-900 fw-bolder mb-3">Create Account</h1>
               </div>
-            
-
-      
 
               <div className="fv-row mb-8">
                 <label className="form-label fs-6 fw-bolder text-gray-900">Name</label>
                 <Field
-                  placeholder="Name"
-                  className={clsx("form-control bg-transparent")}
                   type="text"
                   name="name"
-                  autoComplete="off"
+                  className={clsx('form-control bg-transparent', {
+                    'is-invalid': touched.name && errors.name,
+                    'is-valid': touched.name && !errors.name,
+                  })}
                 />
-                <ErrorMessage name="name" component="div"  />
+                <ErrorMessage name="name" component="div" className="fv-plugins-message-container" />
               </div>
 
-              <div className='fv-row'>
-                {/* begin::Label */}
-                <label className='d-flex align-items-center fs-5 fw-semibold mb-4'>
-                  <span className='required'>Category</span>
-
-                  <i
-                    className='fas fa-exclamation-circle ms-2 fs-7'
-                    data-bs-toggle='tooltip'
-                    title='Select your app category'
-                  ></i>
-                </label>
-                {/* end::Label */}
-                <div>
-                  {/* begin::Option */}
-                  <label className='d-flex align-items-center justify-content-between mb-6 cursor-pointer'>
-                    <span className='d-flex align-items-center me-2'>
-                      <span className='symbol symbol-50px me-6'>
-                        <span className='symbol-label bg-light-primary'>
-                          <KTIcon iconName='compass' className='fs-1 text-primary' />
-                        </span>
-                      </span>
-
-                      <span className='d-flex flex-column'>
-                        <span className='fw-bolder fs-6'>Customer</span>
-                       
-                      </span>
-                    </span>
-
-                    <span className='form-check form-check-custom form-check-solid'>
-                      <Field
-                        type='radio'
-                        name='appType'
-                        value='Customer'
-                        checked={values.appType === 'Customer'}
-                        onChange={() => setFieldValue('appType', 'Customer')}
-                        className='form-check-input'
-                      />
-                    </span>
-                  </label>
-                  {/* end::Option */}
-
-                  {/* begin::Option */}
-                  <label className='d-flex align-items-center justify-content-between mb-6 cursor-pointer'>
-                    <span className='d-flex align-items-center me-2'>
-                      <span className='symbol symbol-50px me-6'>
-                        <span className='symbol-label bg-light-danger'>
-                          <KTIcon iconName='category' className='fs-1 text-danger' />
-                        </span>
-                      </span>
-
-                      <span className='d-flex flex-column'>
-                        <span className='fw-bolder fs-6'>Retailer</span>
-                     
-                      </span>
-                    </span>
-
-                    <span className='form-check form-check-custom form-check-solid'>
-                      <Field
-                        type='radio'
-                        name='appType'
-                        value='Retailer'
-                        checked={values.appType === 'Retailer'}
-                        onChange={() => setFieldValue('appType', 'Retailer')}
-                        className='form-check-input'
-                      />
-                    </span>
-                  </label>
-                  {/* end::Option */}
-
-                  {/* begin::Option */}
-                  <label className='d-flex align-items-center justify-content-between mb-6 cursor-pointer'>
-                    <span className='d-flex align-items-center me-2'>
-                      <span className='symbol symbol-50px me-6'>
-                        <span className='symbol-label bg-light-success'>
-                          <KTIcon iconName='timer' className='fs-1 text-success' />
-                        </span>
-                      </span>
-
-                      <span className='d-flex flex-column'>
-                        <span className='fw-bolder fs-6'>Salesman</span>
-                  
-                      </span>
-                    </span>
-
-                    <span className='form-check form-check-custom form-check-solid'>
-                      <Field
-                        type='radio'
-                        name='appType'
-                        value='Salesman'
-                        checked={values.appType === 'Salesman'}
-                        onChange={() => setFieldValue('appType', 'Salesman')}
-                        className='form-check-input'
-                      />
-                    </span>
-                  </label>
-                  {/* end::Option */}
+              <div className="fv-row mb-8">
+                <label className="form-label fs-6 fw-bolder text-gray-900">Role</label>
+                <div className="d-flex">
+                  <div className="form-check me-5">
+                    <Field
+                      type="radio"
+                      name="appType"
+                      value="CU"
+                      className="form-check-input"
+                    />
+                    <label className="form-check-label">Customer</label>
+                  </div>
+                  <div className="form-check me-5">
+                    <Field
+                      type="radio"
+                      name="appType"
+                      value="RT"
+                      className="form-check-input"
+                    />
+                    <label className="form-check-label">Retailer</label>
+                  </div>
+                  <div className="form-check me-5">
+                    <Field
+                      type="radio"
+                      name="appType"
+                      value="SM"
+                      className="form-check-input"
+                    />
+                    <label className="form-check-label">Salesman</label>
+                  </div>
                 </div>
-                <ErrorMessage name="appType" component="div" />
+                <ErrorMessage name="appType" component="div" className="fv-plugins-message-container" />
               </div>
 
               <div className="d-grid mb-10">
-                <button type="submit" id="kt_send_otp_submit" className="btn btn-primary">
-                  Submit
+                <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                  <KTIcon iconName='check' className='fs-3' />
+                  <span className='indicator-label'>Submit</span>
                 </button>
               </div>
             </Form>
