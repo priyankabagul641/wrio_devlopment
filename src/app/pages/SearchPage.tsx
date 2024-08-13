@@ -12,6 +12,7 @@ interface UserAccount {
 const Search: FC = () => {
   const [menuState] = useState<'main' | 'advanced' | 'preferences'>('main');
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [recentSearchResults, setRecentSearchResults] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const element = useRef<HTMLDivElement | null>(null);
@@ -73,14 +74,15 @@ const Search: FC = () => {
     try {
       const recentResults = await getrecentsearch(userAccount.UserId);
       console.log(recentResults);
-      const recentSearchresults = recentResults.data.map((item: any) => ({
+      const recentSearchResults = recentResults.data.map((item: any) => ({
         name: item.TerminalName,
         image: item.Image || 'default-image-url',
         wrioCode: item.WrioCode,
       }));
-      console.log(recentSearchresults);
+      setRecentSearchResults(recentSearchResults);
+      console.log(recentSearchResults);
     } catch (error) {
-    } finally {
+      setError('An error occurred while fetching recent searches.');
     }
   };
 
@@ -190,90 +192,81 @@ const Search: FC = () => {
               data-kt-search-element="results"
               className={`d-none ${loading ? 'd-none' : ''}`}
             >
-              <div className="scroll-y mh-200px mh-lg-350px">
-                <h3
-                  className="fs-5 text-muted m-0 pb-5"
-                  data-kt-search-element="category-title"
-                >
-                  Results
-                </h3>
+              <div className="scroll-y mh-200px mh-lg-325px">
+                {searchResults.map((result, index) => (
+                  <div
+                    key={index}
+                    className="d-flex text-gray-900 text-hover-primary align-items-center mb-5"
+                    onClick={() => handleResultClick(result.wrioCode)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="symbol symbol-40px me-4">
+                      <img src={result.image} alt={result.name} />
+                    </div>
+                    <div className="d-flex flex-column justify-content-start fw-bold">
+                      <span className="fs-6 fw-bold">{result.name}</span>
+                      <span className="fs-7 fw-bold text-muted">
+                        {result.wrioCode}
+                      </span>
+                      <span className="fs-7 fw-bold text-muted">
+                        {result.IsPrivate}
+                      </span>
+                      <span className="fs-7 fw-bold text-muted">
+                        {result.Status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-                {searchResults.length > 0 ? (
-                  searchResults.map((result, index) => (
+            <div
+              ref={suggestionsElement}
+              data-kt-search-element="suggestions"
+              className="d-none"
+            >
+              <h5 className="mb-4 text-muted">Recent Searches</h5>
+              <div className="scroll-y mh-200px mh-lg-325px">
+                {recentSearchResults.length > 0 ? (
+                  recentSearchResults.map((recentResult, index) => (
                     <div
                       key={index}
                       className="d-flex text-gray-900 text-hover-primary align-items-center mb-5"
-                      onClick={() => handleResultClick(result.wrioCode)} // Use onClick for navigation
+                      onClick={() => handleResultClick(recentResult.wrioCode)}
                       style={{ cursor: 'pointer' }}
                     >
                       <div className="symbol symbol-40px me-4">
-                        <img src={result.image} alt={result.name} />
+                        <img src={recentResult.image} alt={recentResult.name} />
                       </div>
-
                       <div className="d-flex flex-column justify-content-start fw-bold">
-                        <span className="fs-6 fw-bold">{result.name}</span>
+                        <span className="fs-6 fw-bold">{recentResult.name}</span>
                         <span className="fs-7 fw-bold text-muted">
-                          {result.wrioCode}
-                        </span>
-                      </div>
-
-                      <div className="d-flex flex-column justify-content-start fw-bold">
-                        <span
-                          className={`fs-6 fw-bold ${
-                            result.Status === 'ON'
-                              ? 'paraopen'
-                              : 'paraclosed'
-                          }`}
-                        >
-                          {result.Status === 'ON' ? 'Open' : 'Closed'}
-                        </span>
-                        <span
-                          className={`fs-7 fw-bold text-muted ${
-                            result.IsPrivate ? 'paraclosed' : 'paraopen'
-                          }`}
-                        >
-                          {result.IsPrivate ? 'Private' : 'Public'}
+                          {recentResult.wrioCode}
                         </span>
                       </div>
                     </div>
                   ))
                 ) : (
                   <div className="text-center">
-                    <p>No results found</p>
+                    <p>No recent searches found</p>
                   </div>
                 )}
               </div>
             </div>
 
             <div
-              ref={suggestionsElement}
-              className="mb-4"
-              data-kt-search-element="main"
-            >
-              <div className="d-flex flex-stack fw-bold mb-4">
-                <span className="text-muted fs-6 me-2">Recently Searched:</span>
-              </div>
-
-              <div className="scroll-y mh-200px mh-lg-325px">
-                {/* Recently searched items */}
-              </div>
-            </div>
-
-            <div
               ref={emptyElement}
               data-kt-search-element="empty"
-              className={`text-center d-none ${
-                !searchResults.length && !loading ? '' : 'd-none'
-              }`}
+              className="text-center d-none"
             >
               <div className="pt-10 pb-10">
-                <KTIcon iconName="search-list" className="fs-4x opacity-50" />
-              </div>
+                <KTIcon
+                  iconName="magnifier"
+                  className="fs-4x text-gray-200 mb-4"
+                />
 
-              <div className="pb-15 fw-bold">
-                <h3 className="text-gray-600 fs-5 mb-2">No result found</h3>
-                <div className="text-muted fs-7">
-                  Please try again with a different query
+                <div className="text-gray-600 fs-5 mb-2">
+                  No results found. Try again with different keywords.
                 </div>
               </div>
             </div>
