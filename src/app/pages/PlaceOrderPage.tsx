@@ -11,7 +11,15 @@ interface Section {
 const PlaceOrderPage: FC = () => {
   const navigate = useNavigate();
   const [sections, setSections] = useState<Section[]>([]);
-
+  const [comment, setComment] = useState<string>('');
+  const [isConnected, setIsConnected] = useState<boolean>(true); // You should implement this based on your connectivity logic
+  const [terminal, setTerminal] = useState({
+    AskComment: 'Y',
+    CommentMessage: 'Would you like to leave a comment?',
+    OrderAssure: true,
+    OrderAssureMessage: 'Do you assure this order?',
+    FT: 'AA',
+  });
   useEffect(() => {
     // Retrieve and parse the SectionData from session storage
     const storedSectionData = sessionStorage.getItem('SectionsData');
@@ -20,7 +28,52 @@ const PlaceOrderPage: FC = () => {
       setSections(parsedSectionData);
     }
   }, []);
+  const showZeroItemMessage = () => {
+    if (sections.length === 0) {
+      alert('Payment Amount Should not be 0');
+    } else {
+      sessionStorage.setItem('SectionItem', JSON.stringify(sections));
+      if (terminal.FT === 'AA') {
+        navigate('/BookAppointmentPage');
+      } else if (terminal.FT === 'ST' || terminal.FT === 'ER' || terminal.FT === 'SS') {
+        navigate('/OrderFormPage', { state: { MarkNoOrder: false } });
+      } else {
+        navigate('/ConfirmPage');
+      }
+    }
+  };
+  const handleCheckout = () => {
+    if (!isConnected) {
+      alert('No internet connection');
+    } else {
+      if (terminal.AskComment === 'Y') {
+        const userConfirmed = window.confirm(terminal.CommentMessage);
+        if (userConfirmed) {
+          const userComment = prompt('Enter your comment here:');
+          setComment(userComment || '');
+          if (terminal.OrderAssure) {
+            showAssureMessage();
+          } else {
+            showZeroItemMessage();
+          }
+        } else {
+          if (terminal.OrderAssure) {
+            showAssureMessage();
+          } else {
+            showZeroItemMessage();
+          }
+        }
+      } else {
+        showZeroItemMessage();
+      }
+    }
+  };
 
+  const showAssureMessage = () => {
+    if (window.confirm(terminal.OrderAssureMessage)) {
+      showZeroItemMessage();
+    }
+  };
   const confirmPage = () => {
     navigate('/ConfirmPage');
   };
@@ -44,7 +97,7 @@ const PlaceOrderPage: FC = () => {
                     <img
                       src={section.Image}
                       alt={section.SectionName}
-                      className="rounded-circle"
+                      className=""
                     />
                   </div>
                 </div>
@@ -153,7 +206,7 @@ const PlaceOrderPage: FC = () => {
           type="submit"
           id="kt_send_otp_submit"
           className="btn btn-primary"
-          onClick={confirmPage}
+          onClick={handleCheckout}
         >
           Checkout
         </button>
