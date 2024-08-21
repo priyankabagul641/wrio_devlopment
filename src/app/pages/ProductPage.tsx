@@ -16,7 +16,7 @@ interface Product {
   FT: string;
   AllowNoOrder: boolean;
   SalesBeatCollection: boolean;
-   Sections?: any[]; 
+  section?: any[]; 
 }
 
 const ProductPage: FC = () => {
@@ -38,6 +38,8 @@ const ProductPage: FC = () => {
       .then((response: AxiosResponse<Product>) => {
         setProduct(response.data);
         console.log(response.data);
+        const sesctionData=response.data
+        sessionStorage.setItem("SectionsData", JSON.stringify(sesctionData.section));
         setLoading(false);
       })
       .catch(() => {
@@ -51,7 +53,7 @@ const ProductPage: FC = () => {
   }
 
   const goToOrderForm = (markNoOrder: boolean) => {
-    if (product.FT === 'ST' || product.FT === 'SS' || (product.FT === 'ER' && product.Sections && product.Sections.length > 0)) {
+    if (product.FT === 'ST' || product.FT === 'SS' || (product.FT === 'ER' && product.section && product.section.length > 0)) {
       navigate('/orderPage', { state: { markNoOrder } });
     } else {
       navigate('/orderPage', { state: { markNoOrder } });

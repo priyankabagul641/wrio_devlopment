@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AuthModel, User, UserModel } from "./_models";
+import { AuthModel, TerminalDetail, User, UserModel } from "./_models";
 
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
@@ -61,10 +61,23 @@ export function getProductById(wiroid: any) {
   const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetTerminalFormDetails&TerminalId=${wiroid}`;
   return axios.get(url);
 }
-export function getAccountInfo(accountId: any) {
-  const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetAccountInfo&AccountId=${accountId}`;
-  return axios.get(url);
-}
+// export function getTerminalById(wiroid: any) {
+//   const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetTerminalFormDetails&TerminalId=${wiroid}`;
+//   return axios.get(url);
+// }
+export const getTerminalById = async (wiroid: any): Promise<TerminalDetail> => {
+  const response = await axios.get<TerminalDetail>(`https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetTerminalFormDetails&TerminalId=${wiroid}`);
+  return response.data;
+};
+
+// export function getAccountInfo(accountId: any) {
+//   const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetAccountInfo&AccountId=${accountId}`;
+//   return axios.get(url);
+// }
+export const getAccountInfo = async (accountId: string): Promise<TerminalDetail> => {
+  const response = await axios.get<TerminalDetail>(`https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=GetAccountInfo&AccountId=${accountId}`);
+  return response.data;
+};
 
 export function deleteProfile(userId:any,Id: any) {
   // const url = `http://devapi.checkmeinweb.com/APIv2/ClientFunctions.php?function=DeleteProfile&UserId=${userId}&Id=${Id}`;

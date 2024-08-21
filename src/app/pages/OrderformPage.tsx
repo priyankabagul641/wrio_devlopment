@@ -1,58 +1,60 @@
 import { Field, Form, Formik, ErrorMessage } from 'formik';
 import clsx from 'clsx';
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Content } from '../../_metronic/layout/components/content';
 import { useNavigate } from 'react-router-dom';
 import { KTIcon } from '../../_metronic/helpers';
+
+interface Profile {
+  id: string;
+  name: string;
+  image: string;
+  address: string;
+  mobileNumber: string;
+  gstNo: string;
+  businessName: string;
+  customerName: string;
+  routeName: string;
+  routeSequence: string;
+  gstin: string;
+  attachmentDoc: File | null;
+  distributorId: string;
+  email: string;
+}
 
 const OrderformPage: FC = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState('');
+  const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedSort, setSelectedSort] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
-  const [profiles, setProfiles] = useState([
-    {
-      id: '1',
-      name: 'John Doe',
-      image: 'https://via.placeholder.com/100',
-      address: '123 Main St, Anytown',
-      mobileNumber: '1234567890',
-      gstNo: '12345GST',
-      businessName: 'dominos',
-      customerName: 'abc',
-      routeName: 'nashik',
-      routeSequence: '123',
-      gstin: '12345GST',
-      attachmentDoc: null,
-      distributorId: '12',
-      email: 'abc@gmail.com',
-    },
-    {
-      id: '2',
-      name: 'Jane Smith',
-      image: 'https://via.placeholder.com/100',
-      address: '456 Elm St, Othertown',
-      mobileNumber: '0987654321',
-      gstNo: '67890GST',
-      businessName: 'kfc',
-      customerName: '',
-      routeName: 'pune',
-      routeSequence: '45',
-      gstin: '78954125',
-      attachmentDoc: null,
-      distributorId: '12',
-      email: 'kfc@gmail.com',
-    },
-    {
-      id: '3',
-      name: ' Doe',
-      image: 'https://via.placeholder.com/100',
-      address: '123 Main St, Anytown',
-      mobileNumber: '1234567890',
-      gstNo: '12345GST',
-    },
-  ]);
+  const [filteredProfiles, setFilteredProfiles] = useState<Profile[]>([]);
+
+  // Retrieve profiles from session storage on component mount
+  useEffect(() => {
+    const storedProfiles = sessionStorage.getItem('ProfilesInfo');
+    if (storedProfiles) {
+      const parsedProfiles: Profile[] = JSON.parse(storedProfiles).map((profile: any, index: number) => ({
+        id: index.toString(),
+        name: profile['Customer Name'] || '',
+        image: profile.Image || 'https://via.placeholder.com/100',
+        address: profile.Address || '',
+        mobileNumber: profile['Mobile Number'] || '',
+        gstNo: profile.GSTIN || '',
+        businessName: profile['Business Name'] || '',
+        customerName: profile['Customer Name'] || '',
+        routeName: profile['Route Name'] || '',
+        routeSequence: profile['Route Sequence'] || '',
+        gstin: profile.GSTIN || '',
+        attachmentDoc: profile.Attachment || null,
+        distributorId: profile['Distributor Id'] || '',
+        email: profile.Email || '',
+      }));
+      setProfiles(parsedProfiles);
+      setFilteredProfiles(parsedProfiles);
+    }
+  }, []);
 
   const placeOrderPage = () => {
     navigate('/PlaceOrderPage'); // Redirect to PlaceOrderPage after form submission
@@ -65,24 +67,6 @@ const OrderformPage: FC = () => {
   const closeAddUserModal = () => {
     setIsModalOpen(false);
     setSelectedProfile('');
-  };
-
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedSort(e.target.value);
-    // Add sort logic here based on the selected value
-    // e.g., sort profiles array based on the selected value
-  };
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedFilter(e.target.value);
-    // Add filter logic here based on the selected value
-    // e.g., filter profiles array based on the selected value
-  };
-
-  const clearFilters = () => {
-    setSelectedSort('');
-    setSelectedFilter('');
-    // Reset profiles or reload initial profiles
   };
 
   const handleSelectProfile = (setFieldValue: any) => {
@@ -100,6 +84,46 @@ const OrderformPage: FC = () => {
       // Set other fields as necessary
     }
     closeAddUserModal();
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const sortValue = e.target.value;
+    setSelectedSort(sortValue);
+
+    const sortedProfiles = [...filteredProfiles].sort((a, b) => {
+      if (sortValue === 'name') {
+        return a.name.localeCompare(b.name);
+      } else if (sortValue === 'address') {
+        return a.address.localeCompare(b.address);
+      }
+      return 0;
+    });
+
+    setFilteredProfiles(sortedProfiles);
+  };
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const filterValue = e.target.value;
+    setSelectedFilter(filterValue);
+
+    const filteredProfiles = profiles.filter((profile) => {
+      if (filterValue === 'location') {
+        // Replace with the actual logic for filtering by location
+        return profile.routeName.includes('Location'); // Example condition
+      } else if (filterValue === 'category') {
+        // Replace with the actual logic for filtering by category
+        return profile.businessName.includes('Category'); // Example condition
+      }
+      return true;
+    });
+
+    setFilteredProfiles(filteredProfiles);
+  };
+
+  const clearFilters = () => {
+    setSelectedSort('');
+    setSelectedFilter('');
+    setFilteredProfiles(profiles); // Reset profiles to the original list
   };
 
   return (
@@ -181,18 +205,13 @@ const OrderformPage: FC = () => {
                   </div>
                   <div className="fv-row mb-8">
                     <label className="form-label fs-6 fw-bolder text-gray-900">Route Name</label>
-                    <Field as="select" name="routeName" className={clsx("form-control bg-transparent")}>
-                      <option value="" label="Select route" />
-                      <option value="ghatkopar" label="Ghatkopar" />
-                      <option value="bhandup" label="Bhandup" />
-                      <option value="panvel" label="Panvel" />
-                      <option value="vikhroli" label="Vikhroli" />
-                      <option value="chembur" label="Chembur" />
-                      <option value="kurla" label="Kurla" />
-                      <option value="vashi" label="Vashi" />
-                      <option value="sanpada" label="Sanpada" />
-                      <option value="dadar" label="Dadar" />
-                    </Field>
+                    <Field
+                      placeholder="Route Name"
+                      className={clsx("form-control bg-transparent")}
+                      type="text"
+                      name="routeName"
+                      autoComplete="off"
+                    />
                     <ErrorMessage name="routeName" component="div" />
                   </div>
                   <div className="fv-row mb-8">
@@ -218,19 +237,6 @@ const OrderformPage: FC = () => {
                     <ErrorMessage name="gstin" component="div" />
                   </div>
                   <div className="fv-row mb-8">
-                    <label className="form-label fs-6 fw-bolder text-gray-900">Attachment</label>
-                    <input
-                      type="file"
-                      className="form-control bg-transparent"
-                      onChange={(event) => {
-                        if (event.currentTarget.files) {
-                          setFieldValue('attachmentDoc', event.currentTarget.files[0]);
-                        }
-                      }}
-                    />
-                    <ErrorMessage name="attachmentDoc" component="div" />
-                  </div>
-                  <div className="fv-row mb-8">
                     <label className="form-label fs-6 fw-bolder text-gray-900">Distributor ID</label>
                     <Field
                       placeholder="Distributor ID"
@@ -252,24 +258,23 @@ const OrderformPage: FC = () => {
                     />
                     <ErrorMessage name="email" component="div" />
                   </div>
-                  <div className="d-grid mb-10">
-                    <button type="submit" id="kt_login_signin_form_submit_button" className="btn btn-primary">
-                      <span className="indicator-label">Submit</span>
+                  <div className="fv-row mb-8">
+                    <button type="submit" className="btn btn-primary">
+                      Submit
                     </button>
                   </div>
                 </Form>
               </div>
             </div>
-            {/* Modal for selecting profile */}
+
+            {/* Modal */}
             {isModalOpen && (
-              <div className="modal show d-block" tabIndex={-1} role="dialog">
-                <div className="modal-dialog" role="document">
+              <div className="modal fade show d-block" tabIndex={-1} role="dialog" aria-modal="true">
+                <div className="modal-dialog modal-dialog-centered" role="document">
                   <div className="modal-content">
                     <div className="modal-header">
                       <h5 className="modal-title">Select Profile</h5>
-                      <button type="button" className="close" onClick={closeAddUserModal}>
-                        <span aria-hidden="true">&times;</span>
-                      </button>
+                      <button type="button" className="btn-close" onClick={closeAddUserModal}></button>
                     </div>
                     <div className="modal-body">
                       {/* Sort and filter options */}
@@ -292,21 +297,18 @@ const OrderformPage: FC = () => {
                       <button type="button" className="btn btn-secondary mb-3" onClick={clearFilters}>
                         Clear Filters
                       </button>
-                      {/* Profile list */}
                       <ul className="list-group">
-                        {profiles.map((profile) => (
+                        {filteredProfiles.map((profile) => (
                           <li
                             key={profile.id}
-                            className={`list-group-item ${selectedProfile === profile.id ? 'active' : ''}`}
+                            className={clsx(
+                              'list-group-item',
+                              selectedProfile === profile.id && 'active'
+                            )}
                             onClick={() => setSelectedProfile(profile.id)}
                           >
-                            <div className="d-flex align-items-center">
-                              <img src={profile.image} alt="Profile" className="rounded-circle" width="50" height="50" />
-                              <div className="ms-3">
-                                <h5>{profile.name}</h5>
-                                <p>{profile.address}</p>
-                              </div>
-                            </div>
+                            <img src={profile.image} alt={profile.name} className="me-3" width="30" height="30" />
+                            {profile.name}
                           </li>
                         ))}
                       </ul>

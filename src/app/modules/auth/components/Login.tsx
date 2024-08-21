@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
-import { sendOtp, verifyOtp, setVerifiedOTPInfo, clientLogin, getUserAcccountInfo } from "../core/_requests";
+import { sendOtp, verifyOtp, setVerifiedOTPInfo, clientLogin, getUserAcccountInfo, getProfiles } from "../core/_requests";
 import { useNavigate } from "react-router-dom";
 import useFcmToken from "../core/useFcmToken";
 import { Registration } from "./Registration";
@@ -80,6 +80,9 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
             sessionStorage.setItem("CurrentUserInfo", JSON.stringify(userAccountInfo[0]));
             onSuccess();
             navigate("/dashboard");
+            const { data: profiles } = await getProfiles(userId);
+            console.log(profiles);
+            sessionStorage.setItem("ProfilesInfo", JSON.stringify(profiles));
           }
         } else {
           setStatus("Incorrect OTP");
