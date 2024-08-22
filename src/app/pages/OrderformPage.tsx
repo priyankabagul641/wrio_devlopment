@@ -22,16 +22,15 @@ interface Profile {
   email: string;
 }
 
+const defaultProfileId = '0'; // Default profile id; adjust as needed
+
 const OrderformPage: FC = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [selectedSort, setSelectedSort] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('');
   const [filteredProfiles, setFilteredProfiles] = useState<Profile[]>([]);
 
-  // Retrieve profiles from session storage on component mount
   useEffect(() => {
     const storedProfiles = sessionStorage.getItem('ProfilesInfo');
     if (storedProfiles) {
@@ -53,32 +52,35 @@ const OrderformPage: FC = () => {
       }));
       setProfiles(parsedProfiles);
       setFilteredProfiles(parsedProfiles);
-
-      // Set default profile if available
-      if (parsedProfiles.length > 0) {
-        setSelectedProfile(parsedProfiles[0].id);
+      
+      // Set default profile
+      const defaultProfile = parsedProfiles.find(profile => profile.id === defaultProfileId);
+      if (defaultProfile) {
+        setSelectedProfile(defaultProfile);
       }
     }
   }, []);
 
-  // Get default values based on selected profile
+  useEffect(() => {
+    if (selectedProfile) {
+      // Automatically populate the form fields with the selected profile values
+    }
+  }, [selectedProfile]);
+
   const getDefaultValues = () => {
     if (selectedProfile) {
-      const profile = profiles.find((p) => p.id === selectedProfile);
-      if (profile) {
-        return {
-          businessName: profile.businessName || '',
-          customerName: profile.customerName || '',
-          address: profile.address || '',
-          mobileNumber: profile.mobileNumber || '',
-          routeName: profile.routeName || '',
-          routeSequence: profile.routeSequence || '',
-          gstin: profile.gstin || '',
-          attachmentDoc: profile.attachmentDoc || null,
-          distributorId: profile.distributorId || '',
-          email: profile.email || '',
-        };
-      }
+      return {
+        businessName: selectedProfile.businessName || '',
+        customerName: selectedProfile.customerName || '',
+        address: selectedProfile.address || '',
+        mobileNumber: selectedProfile.mobileNumber || '',
+        routeName: selectedProfile.routeName || '',
+        routeSequence: selectedProfile.routeSequence || '',
+        gstin: selectedProfile.gstin || '',
+        attachmentDoc: selectedProfile.attachmentDoc || null,
+        distributorId: selectedProfile.distributorId || '',
+        email: selectedProfile.email || '',
+      };
     }
     return {
       businessName: '',
@@ -94,39 +96,23 @@ const OrderformPage: FC = () => {
     };
   };
 
-  const placeOrderPage = () => {
-    navigate('/PlaceOrderPage'); // Redirect to PlaceOrderPage after form submission
-  };
-
-  const openAddUserModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeAddUserModal = () => {
-    setIsModalOpen(false);
-    setSelectedProfile(null);
-  };
-
   const handleSelectProfile = (setFieldValue: any) => {
-    const profile = profiles.find((p) => p.id === selectedProfile);
-    if (profile) {
-      setFieldValue('businessName', profile.businessName || '');
-      setFieldValue('customerName', profile.customerName || '');
-      setFieldValue('address', profile.address || '');
-      setFieldValue('mobileNumber', profile.mobileNumber || '');
-      setFieldValue('routeName', profile.routeName || '');
-      setFieldValue('routeSequence', profile.routeSequence || '');
-      setFieldValue('gstin', profile.gstin || '');
-      setFieldValue('distributorId', profile.distributorId || '');
-      setFieldValue('email', profile.email || '');
-      // Set other fields as necessary
+    if (selectedProfile) {
+      setFieldValue('businessName', selectedProfile.businessName || '');
+      setFieldValue('customerName', selectedProfile.customerName || '');
+      setFieldValue('address', selectedProfile.address || '');
+      setFieldValue('mobileNumber', selectedProfile.mobileNumber || '');
+      setFieldValue('routeName', selectedProfile.routeName || '');
+      setFieldValue('routeSequence', selectedProfile.routeSequence || '');
+      setFieldValue('gstin', selectedProfile.gstin || '');
+      setFieldValue('distributorId', selectedProfile.distributorId || '');
+      setFieldValue('email', selectedProfile.email || '');
     }
-    closeAddUserModal();
+    setIsModalOpen(false);
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const sortValue = e.target.value;
-    setSelectedSort(sortValue);
 
     const sortedProfiles = [...filteredProfiles].sort((a, b) => {
       if (sortValue === 'name') {
@@ -142,15 +128,12 @@ const OrderformPage: FC = () => {
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const filterValue = e.target.value;
-    setSelectedFilter(filterValue);
 
     const filteredProfiles = profiles.filter((profile) => {
       if (filterValue === 'location') {
-        // Replace with the actual logic for filtering by location
-        return profile.routeName.includes('Location'); // Example condition
+        return profile.routeName.includes('Location'); 
       } else if (filterValue === 'category') {
-        // Replace with the actual logic for filtering by category
-        return profile.businessName.includes('Category'); // Example condition
+        return profile.businessName.includes('Category'); 
       }
       return true;
     });
@@ -159,34 +142,32 @@ const OrderformPage: FC = () => {
   };
 
   const clearFilters = () => {
-    setSelectedSort('');
-    setSelectedFilter('');
-    setFilteredProfiles(profiles); // Reset profiles to the original list
+    setFilteredProfiles(profiles);
   };
 
   return (
     <>
       <Formik
-        initialValues={getDefaultValues()} // Use the dynamic default values
-        enableReinitialize={true} // Ensure Formik reinitializes when values change
+        initialValues={getDefaultValues()}
+        enableReinitialize={true}
         onSubmit={(values) => {
           console.log(values);
-          placeOrderPage();
+          navigate('/PlaceOrderPage');
         }}
       >
         {({ setFieldValue }) => (
           <Content>
             <div className="card mb-5 mb-xl-10">
               <div className="card-body pt-9 pb-0">
-                <Form className="form w-100" noValidate id="kt_login_send_otp_form">
+                <Form className="form w-100" noValidate>
                   <div className="text-center mb-11">
                     <h1 className="text-gray-900 fw-bolder mb-3">Order Form</h1>
                   </div>
-                  <button type="button" className="btn btn-secondary mb-3" onClick={openAddUserModal}>
+                  <button type="button" className="btn btn-secondary mb-3" onClick={() => setIsModalOpen(true)}>
                     <KTIcon iconName="plus" className="fs-2" />
                     Select Profile
                   </button>
-                  {/* Form Fields */}
+
                   <div className="fv-row mb-8">
                     <label className="form-label fs-6 fw-bolder text-gray-900">Business Name</label>
                     <Field
@@ -265,9 +246,9 @@ const OrderformPage: FC = () => {
                     <ErrorMessage name="gstin" component="div" />
                   </div>
                   <div className="fv-row mb-8">
-                    <label className="form-label fs-6 fw-bolder text-gray-900">Distributor ID</label>
+                    <label className="form-label fs-6 fw-bolder text-gray-900">Distributor Id</label>
                     <Field
-                      placeholder="Distributor ID"
+                      placeholder="Distributor Id"
                       className={clsx("form-control bg-transparent")}
                       type="text"
                       name="distributorId"
@@ -287,67 +268,73 @@ const OrderformPage: FC = () => {
                     <ErrorMessage name="email" component="div" />
                   </div>
                   <div className="fv-row mb-8">
-                    <button type="submit" className="btn btn-primary">
-                      Submit
-                    </button>
+                    <label className="form-label fs-6 fw-bolder text-gray-900">Attachment Document</label>
+                    <input
+                      className={clsx("form-control bg-transparent")}
+                      type="file"
+                      name="attachmentDoc"
+                      onChange={(e) => setFieldValue('attachmentDoc', e.target.files ? e.target.files[0] : null)}
+                    />
                   </div>
+                  <button type="submit" className="btn btn-lg btn-primary w-100 mb-5">
+                    Submit
+                  </button>
                 </Form>
               </div>
             </div>
 
             {/* Modal */}
             {isModalOpen && (
-              <div className="modal fade show d-block" tabIndex={-1} role="dialog" aria-modal="true">
-                <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal d-block" tabIndex={-1}>
+                <div className="modal-dialog">
                   <div className="modal-content">
                     <div className="modal-header">
                       <h5 className="modal-title">Select Profile</h5>
-                      <button type="button" className="btn-close" onClick={closeAddUserModal}></button>
+                      <button type="button" className="btn-close" onClick={() => setIsModalOpen(false)}></button>
                     </div>
                     <div className="modal-body">
-                      {/* Sort and filter options */}
                       <div className="mb-3">
-                        <label htmlFor="sort">Sort By:</label>
-                        <select id="sort" value={selectedSort} onChange={handleSortChange} className="form-control">
-                          <option value="">None</option>
+                        <label htmlFor="sort" className="form-label">Sort by:</label>
+                        <select id="sort" className="form-select" onChange={handleSortChange}>
                           <option value="name">Name</option>
                           <option value="address">Address</option>
                         </select>
                       </div>
                       <div className="mb-3">
-                        <label htmlFor="filter">Filter By:</label>
-                        <select id="filter" value={selectedFilter} onChange={handleFilterChange} className="form-control">
+                        <label htmlFor="filter" className="form-label">Filter by:</label>
+                        <select id="filter" className="form-select" onChange={handleFilterChange}>
                           <option value="">None</option>
                           <option value="location">Location</option>
                           <option value="category">Category</option>
                         </select>
                       </div>
-                      <button type="button" className="btn btn-secondary mb-3" onClick={clearFilters}>
-                        Clear Filters
-                      </button>
-                      <ul className="list-group">
+                      <div className="mb-3">
+                        <button type="button" className="btn btn-secondary" onClick={clearFilters}>Clear Filters</button>
+                      </div>
+                      <div className="list-group">
                         {filteredProfiles.map((profile) => (
-                          <li
+                          <button
                             key={profile.id}
-                            className={clsx(
-                              'list-group-item',
-                              selectedProfile === profile.id && 'active'
-                            )}
-                            onClick={() => setSelectedProfile(profile.id)}
+                            type="button"
+                          
+                            className={`list-group-item list-group-item-action ${profile.id === defaultProfileId ? 'active' : ''}`}
+                            onClick={() => {
+                              setSelectedProfile(profile);
+                              handleSelectProfile(setFieldValue);
+                            }}
                           >
-                            <img src={profile.image} alt={profile.name} className="me-3" width="30" height="30" />
-                            {profile.name}
-                          </li>
+                            <div className="d-flex w-100 justify-content-between">
+                              <h5 className="mb-1">{profile.name}</h5>
+                              <small>{profile.address}</small>
+                            </div>
+                            <p className="mb-1">{profile.businessName}</p>
+                            <small>{profile.mobileNumber}</small>
+                          </button>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                     <div className="modal-footer">
-                      <button type="button" className="btn btn-secondary" onClick={closeAddUserModal}>
-                        Close
-                      </button>
-                      <button type="button" className="btn btn-primary" onClick={() => handleSelectProfile(setFieldValue)}>
-                        Select
-                      </button>
+                      <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Close</button>
                     </div>
                   </div>
                 </div>
