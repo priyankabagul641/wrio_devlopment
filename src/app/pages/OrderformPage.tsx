@@ -25,7 +25,7 @@ interface Profile {
 const OrderformPage: FC = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState('');
+  const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedSort, setSelectedSort] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
@@ -53,8 +53,46 @@ const OrderformPage: FC = () => {
       }));
       setProfiles(parsedProfiles);
       setFilteredProfiles(parsedProfiles);
+
+      // Set default profile if available
+      if (parsedProfiles.length > 0) {
+        setSelectedProfile(parsedProfiles[0].id);
+      }
     }
   }, []);
+
+  // Get default values based on selected profile
+  const getDefaultValues = () => {
+    if (selectedProfile) {
+      const profile = profiles.find((p) => p.id === selectedProfile);
+      if (profile) {
+        return {
+          businessName: profile.businessName || '',
+          customerName: profile.customerName || '',
+          address: profile.address || '',
+          mobileNumber: profile.mobileNumber || '',
+          routeName: profile.routeName || '',
+          routeSequence: profile.routeSequence || '',
+          gstin: profile.gstin || '',
+          attachmentDoc: profile.attachmentDoc || null,
+          distributorId: profile.distributorId || '',
+          email: profile.email || '',
+        };
+      }
+    }
+    return {
+      businessName: '',
+      customerName: '',
+      address: '',
+      mobileNumber: '',
+      routeName: '',
+      routeSequence: '',
+      gstin: '',
+      attachmentDoc: null,
+      distributorId: '',
+      email: '',
+    };
+  };
 
   const placeOrderPage = () => {
     navigate('/PlaceOrderPage'); // Redirect to PlaceOrderPage after form submission
@@ -66,7 +104,7 @@ const OrderformPage: FC = () => {
 
   const closeAddUserModal = () => {
     setIsModalOpen(false);
-    setSelectedProfile('');
+    setSelectedProfile(null);
   };
 
   const handleSelectProfile = (setFieldValue: any) => {
@@ -129,18 +167,8 @@ const OrderformPage: FC = () => {
   return (
     <>
       <Formik
-        initialValues={{
-          businessName: '',
-          customerName: '',
-          address: '',
-          mobileNumber: '',
-          routeName: '',
-          routeSequence: '',
-          gstin: '',
-          attachmentDoc: null,
-          distributorId: '',
-          email: '',
-        }}
+        initialValues={getDefaultValues()} // Use the dynamic default values
+        enableReinitialize={true} // Ensure Formik reinitializes when values change
         onSubmit={(values) => {
           console.log(values);
           placeOrderPage();
