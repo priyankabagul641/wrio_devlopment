@@ -17,7 +17,7 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 1000, // Suppress warnings for larger chunks
   },
-  base: '/wrio', // Ensure your base URL is correct for your deployment
+  base: '/', // Ensure your base URL is correct for your deployment
   plugins: [
     react(),
     VitePWA({
