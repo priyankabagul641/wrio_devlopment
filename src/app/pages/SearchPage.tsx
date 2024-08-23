@@ -44,7 +44,7 @@ const Search: FC = () => {
       .then((response) => {
         const results = response.map((item: any) => ({
           name: item.TerminalName,
-          image: item.Image || 'default-image-url',
+          image: item.Image ,
           wrioCode: item.WrioCode,
           IsPrivate: item.IsPrivate,
           Status: item.Status,
@@ -78,7 +78,7 @@ const Search: FC = () => {
       const recentResults = await getrecentsearch(userAccount.UserId);
       const recentSearchResults = recentResults.data.map((item: any) => ({
         name: item.TerminalName,
-        image: item.Image || 'default-image-url',
+        image: item.Image ,
         wrioCode: item.WrioCode,
       }));
       setRecentSearchResults(recentSearchResults);
