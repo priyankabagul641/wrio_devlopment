@@ -1,49 +1,49 @@
-// src/hooks/useFcmToken.ts
-import { useEffect } from 'react';
-import { messaging } from './firebase';
-import { getToken } from 'firebase/messaging';
+// // src/hooks/useFcmToken.ts
+// import { useEffect } from 'react';
+// import { messaging } from './firebase';
+// import { getToken } from 'firebase/messaging';
 
-const getDeviceOS = (): string => {
-  const userAgent = navigator.userAgent || navigator.vendor;
+// const getDeviceOS = (): string => {
+//   const userAgent = navigator.userAgent || navigator.vendor;
 
-  if (/windows phone/i.test(userAgent)) return 'Windows Phone';
-  if (/android/i.test(userAgent)) return 'Android';
-  if (/iPad|iPhone|iPod/.test(userAgent)) return 'iOS';
+//   if (/windows phone/i.test(userAgent)) return 'Windows Phone';
+//   if (/android/i.test(userAgent)) return 'Android';
+//   if (/iPad|iPhone|iPod/.test(userAgent)) return 'iOS';
 
-  return 'unknown';
-};
+//   return 'unknown';
+// };
 
-const useFcmToken = (): void => {
-  useEffect(() => {
-    const requestPermission = async (): Promise<void> => {
-      console.log('Requesting notification permission...');
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        console.log('Notification permission granted.');
-        const requestFcmToken = async (): Promise<void> => {
-          try {
-            const token = await getToken(messaging, { vapidKey: 'BHLbz6465LpZoZs6JbHgG0BHKSJXDeeoGmIQTT-0RN9mgDF8X60jqvr_ecGkD-X_YYfduB0UIJvp7isSznZu1OQ' });
-            if (token) {
-              console.log('FCM Token:', token);
-              localStorage.setItem('FCMToken', token);
-            } else {
-              console.log('No registration token available. Request permission to generate one.');
-            }
-          } catch (error) {
-            console.error('An error occurred while retrieving token.', error);
-          }
-        };
-        requestFcmToken();
-      } else {
-        console.log('Unable to get permission to notify.');
-      }
-    };
+// const useFcmToken = (): void => {
+//   useEffect(() => {
+//     const requestPermission = async (): Promise<void> => {
+//       console.log('Requesting notification permission...');
+//       const permission = await Notification.requestPermission();
+//       if (permission === 'granted') {
+//         console.log('Notification permission granted.');
+//         const requestFcmToken = async (): Promise<void> => {
+//           try {
+//             const token = await getToken(messaging);
+//             if (token) {
+//               console.log('FCM Token:', token);
+//               localStorage.setItem('FCMToken', token);
+//             } else {
+//               console.log('No registration token available. Request permission to generate one.');
+//             }
+//           } catch (error) {
+//             console.error('An error occurred while retrieving token.', error);
+//           }
+//         };
+//         requestFcmToken();
+//       } else {
+//         console.log('Unable to get permission to notify.');
+//       }
+//     };
 
-    const deviceOs = getDeviceOS();
-    localStorage.setItem('currentPlatform', deviceOs);
+//     const deviceOs = getDeviceOS();
+//     localStorage.setItem('currentPlatform', deviceOs);
 
-    requestPermission();
-  }, []);
-};
+//     requestPermission();
+//   }, []);
+// };
 
-export default useFcmToken;
+// export default useFcmToken;

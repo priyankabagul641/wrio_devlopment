@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import clsx from "clsx";
 import { sendOtp, verifyOtp, setVerifiedOTPInfo, clientLogin, getUserAcccountInfo, getProfiles } from "../core/_requests";
 import { useNavigate } from "react-router-dom";
-import useFcmToken from "../core/useFcmToken";
+// import useFcmToken from "../core/useFcmToken";
 import { Registration } from "./Registration";
 
 // Validation schemas
@@ -39,7 +39,7 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const [mobile, setMobile] = useState("");
   const navigate = useNavigate();
 
-  useFcmToken();
+  // useFcmToken();
 
   const formikMobile = useFormik({
     initialValues: initialMobileValues,
