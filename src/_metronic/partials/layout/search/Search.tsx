@@ -161,7 +161,7 @@ const Search: FC = () => {
                   className='d-flex text-gray-900 text-hover-primary align-items-center mb-5'
                 >
                   <div className='symbol symbol-40px me-4'>
-                    <img src={toAbsoluteUrl('assets/imgs/logo.png/300-6.jpg')} alt='' />
+                    {/* <img src={toAbsoluteUrl('assets/imgs/logo.png/300-6.jpg')} alt='' /> */}
                   </div>
 
                   <div className='d-flex flex-column justify-content-start fw-bold'>
@@ -175,7 +175,7 @@ const Search: FC = () => {
                   className='d-flex text-gray-900 text-hover-primary align-items-center mb-5'
                 >
                   <div className='symbol symbol-40px me-4'>
-                    <img src={toAbsoluteUrl('assets/imgs/logo.png/300-2.jpg')} alt='' />
+                    {/* <img src={toAbsoluteUrl('assets/imgs/logo.png/300-2.jpg')} alt='' /> */}
                   </div>
 
                   <div className='d-flex flex-column justify-content-start fw-bold'>
@@ -189,7 +189,7 @@ const Search: FC = () => {
                   className='d-flex text-gray-900 text-hover-primary align-items-center mb-5'
                 >
                   <div className='symbol symbol-40px me-4'>
-                    <img src={toAbsoluteUrl('assets/imgs/logo.png/300-9.jpg')} alt='' />
+                    {/* <img src={toAbsoluteUrl('assets/imgs/logo.png/300-9.jpg')} alt='' /> */}
                   </div>
 
                   <div className='d-flex flex-column justify-content-start fw-bold'>
@@ -203,7 +203,7 @@ const Search: FC = () => {
                   className='d-flex text-gray-900 text-hover-primary align-items-center mb-5'
                 >
                   <div className='symbol symbol-40px me-4'>
-                    <img src={toAbsoluteUrl('assets/imgs/logo.png/300-14.jpg')} alt='' />
+                    {/* <img src={toAbsoluteUrl('assets/imgs/logo.png/300-14.jpg')} alt='' /> */}
                   </div>
 
                   <div className='d-flex flex-column justify-content-start fw-bold'>
@@ -217,7 +217,7 @@ const Search: FC = () => {
                   className='d-flex text-gray-900 text-hover-primary align-items-center mb-5'
                 >
                   <div className='symbol symbol-40px me-4'>
-                    <img src={toAbsoluteUrl('assets/imgs/logo.png/300-11.jpg')} alt='' />
+                    {/* <img src={toAbsoluteUrl('assets/imgs/logo.png/300-11.jpg')} alt='' /> */}
                   </div>
 
                   <div className='d-flex flex-column justify-content-start fw-bold'>
@@ -239,11 +239,11 @@ const Search: FC = () => {
                 >
                   <div className='symbol symbol-40px me-4'>
                     <span className='symbol-label bg-light'>
-                      <img
+                      {/* <img
                         className='w-20px h-20px'
                         src={toAbsoluteUrl('media/svg/brand-logos/volicity-9.svg')}
                         alt=''
-                      />
+                      /> */}
                     </span>
                   </div>
 
@@ -259,11 +259,11 @@ const Search: FC = () => {
                 >
                   <div className='symbol symbol-40px me-4'>
                     <span className='symbol-label bg-light'>
-                      <img
+                      {/* <img
                         className='w-20px h-20px'
                         src={toAbsoluteUrl('media/svg/brand-logos/tvit.svg')}
                         alt=''
-                      />
+                      /> */}
                     </span>
                   </div>
 
@@ -279,11 +279,11 @@ const Search: FC = () => {
                 >
                   <div className='symbol symbol-40px me-4'>
                     <span className='symbol-label bg-light'>
-                      <img
+                      {/* <img
                         className='w-20px h-20px'
                         src={toAbsoluteUrl('media/svg/misc/infography.svg')}
                         alt=''
-                      />
+                      /> */}
                     </span>
                   </div>
 
@@ -299,11 +299,11 @@ const Search: FC = () => {
                 >
                   <div className='symbol symbol-40px me-4'>
                     <span className='symbol-label bg-light'>
-                      <img
+                      {/* <img
                         className='w-20px h-20px'
                         src={toAbsoluteUrl('media/svg/brand-logos/leaf.svg')}
                         alt=''
-                      />
+                      /> */}
                     </span>
                   </div>
 
@@ -319,11 +319,11 @@ const Search: FC = () => {
                 >
                   <div className='symbol symbol-40px me-4'>
                     <span className='symbol-label bg-light'>
-                      <img
+                      {/* <img
                         className='w-20px h-20px'
                         src={toAbsoluteUrl('media/svg/brand-logos/tower.svg')}
                         alt=''
-                      />
+                      /> */}
                     </span>
                   </div>
 
