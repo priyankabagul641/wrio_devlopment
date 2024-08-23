@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 
 import { QueryClient, QueryClientProvider } from 'react-query'
 
-// import { ReactQueryDevtools } from 'react-query/devtools'
 
 // Metronics
 import { MetronicI18nProvider } from './_metronic/i18n/Metronici18n.tsx'
