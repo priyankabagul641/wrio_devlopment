@@ -53,19 +53,19 @@ const SidebarLogo = (props: PropsType) => {
         {config.layoutType === 'dark-sidebar' ? (
           <img
             alt='Logo'
-            src='src/app/assets/imgs/wrio-logo.png'
+            src='assets/imgs/wrio-logo.png'
             className='h-25px app-sidebar-logo-default'
           />
         ) : (
           <>
             <img
               alt='Logo'
-              src='src/app/assets/imgs/wrio-logo.png'
+              src='assets/imgs/wrio-logo.png'
               className='h-25px app-sidebar-logo-default theme-light-show'
             />
             <img
               alt='Logo'
-              src='src/app/assets/imgs/wrio-logo.png'
+              src='assets/imgs/wrio-logo.png'
               className='h-25px app-sidebar-logo-default theme-dark-show'
             />
           </>
@@ -73,7 +73,7 @@ const SidebarLogo = (props: PropsType) => {
 
         <img
           alt='Logo'
-          src={toAbsoluteUrl('src/app/assets/imgs/wrio-logo.png')}
+          src={toAbsoluteUrl('assets/imgs/wrio-logo.png')}
           className='h-20px app-sidebar-logo-minimize'
         />
       </Link>
