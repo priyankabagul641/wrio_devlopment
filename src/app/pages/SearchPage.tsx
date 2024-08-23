@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal, Button, Form } from 'react-bootstrap'; // Install react-bootstrap and bootstrap if not already installed
+import { Modal, Button, Form } from 'react-bootstrap'; 
 import { SearchComponent } from '../../_metronic/assets/ts/components';
 import { KTIcon } from '../../_metronic/helpers';
-import { search, getrecentsearch, getTerminalById, getAccountInfo } from '../modules/auth/core/_requests'; // Ensure this path is correct
+import { search, getrecentsearch, getTerminalById, getAccountInfo } from '../modules/auth/core/_requests';
 import { TerminalDetail } from '../modules/auth';
 
 interface UserAccount {
@@ -16,7 +16,7 @@ const Search: FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [recentSearchResults, setRecentSearchResults] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [err, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [accessKey, setAccessKey] = useState<string>('');
   const [selectedWrioCode, setSelectedWrioCode] = useState<string>('');
@@ -62,9 +62,11 @@ const Search: FC = () => {
           emptyElement.current!.classList.remove('d-none');
         }
       })
-      .catch((err) => {
+      .catch((err:any) => {
         setError('An error occurred while fetching search results.');
         setLoading(false);
+        console.log(err);
+        
         resultsElement.current!.classList.add('d-none');
         emptyElement.current!.classList.remove('d-none');
       })
@@ -167,7 +169,7 @@ console.log(accountInfo);
         id="kt_header_search"
         className="d-flex align-items-stretch"
         data-kt-search-keypress="true"
-        data-kt-search-min-length="2"
+        data-kt-search-min-length="3"
         data-kt-search-enter="enter"
         data-kt-search-layout="menu"
         data-kt-menu-trigger="auto"
