@@ -302,7 +302,7 @@ const TablesWidget4: FC<Props> = ({className}) => {
                   <tr>
                     <td>
                       <div className='symbol symbol-50px'>
-                        <img src={toAbsoluteUrl('media/svg/avatars/043-boy-18.svg')} alt='' />
+                        {/* <img src={toAbsoluteUrl('media/svg/avatars/043-boy-18.svg')} alt='' /> */}
                       </div>
                     </td>
                     <td>

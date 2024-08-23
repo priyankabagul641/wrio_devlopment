@@ -5,7 +5,7 @@ import {KTIcon, toAbsoluteUrl} from '../../../helpers'
 const InviteUsers: FC = () => {
   const users = [
     {
-      avatar: 'assets/imgs/logo.png/300-6.jpg',
+      // avatar: 'assets/imgs/logo.png/300-6.jpg',
       name: 'Emma Smith',
       email: 'e.smith@kpmg.com.au',
       access: '1',
@@ -133,11 +133,11 @@ const InviteUsers: FC = () => {
             </div>
 
             <div className='btn btn-light-primary fw-bolder w-100 mb-8'>
-              <img
+              {/* <img
                 alt='Logo'
                 src={toAbsoluteUrl('media/svg/brand-logos/google-icon.svg')}
                 className='h-20px me-3'
-              />
+              /> */}
               Invite Gmail Contacts
             </div>
 
@@ -163,7 +163,7 @@ const InviteUsers: FC = () => {
                     >
                       <div className='d-flex align-items-center'>
                         <div className='symbol symbol-35px symbol-circle'>
-                          {user.avatar && <img alt='Pic' src={toAbsoluteUrl(user.avatar)} />}
+                          {/* {user.avatar && <img alt='Pic' src={toAbsoluteUrl(user.avatar)} />} */}
                           {user.state && (
                             <div className='symbol symbol-35px symbol-circle'>
                               <span
