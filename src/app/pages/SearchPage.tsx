@@ -49,6 +49,7 @@ const Search: FC = () => {
           IsPrivate: item.IsPrivate,
           Status: item.Status,
         }));
+console.log(results);
 
         setSearchResults(results);
         setError(null);
