@@ -298,11 +298,13 @@ console.log(accountInfo);
         </Modal.Header>
         <Modal.Body>
           <Form.Group>
-            <Form.Label>Access Key</Form.Label>
+            <Form.Label htmlFor="accessKey">Access Key</Form.Label>
             <Form.Control
               type="password"
               value={accessKey}
               onChange={(e) => setAccessKey(e.target.value)}
+               id="accessKey"
+  name="accessKey"
             />
           </Form.Group>
         </Modal.Body>
