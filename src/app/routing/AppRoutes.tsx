@@ -8,7 +8,6 @@ import { PrivateRoutes } from "./PrivateRoutes";
 const { BASE_URL } = import.meta.env;
 
 const AppRoutes: FC = () => {
-  // Check if the user is authenticated from session storage
   const isAuthenticated = !!sessionStorage.getItem("CurrentUserInfo");
 
   return (
@@ -19,7 +18,7 @@ const AppRoutes: FC = () => {
           <Route path="logout" element={<Logout />} />
           <Route path="auth/*" element={<AuthPage />} />
           <Route path="*" element={isAuthenticated ? <PrivateRoutes /> : <Navigate to="/dashboard" />} />
-          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "auth/login"} />} />
+          {/* <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "auth/login"} />} /> */}
         </Route>
       </Routes>
     </BrowserRouter>
