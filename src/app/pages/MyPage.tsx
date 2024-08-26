@@ -66,7 +66,7 @@ const DashboardPage: FC = () => {
 
   useEffect(() => {
     fetchTerminals();
-  }, []); // Run once on component mount
+  }, []); 
 
   if (loading) {
     return <div>Please wait...</div>;

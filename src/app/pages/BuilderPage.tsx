@@ -4,7 +4,6 @@ import { Content } from '../../_metronic/layout/components/content';
 import React, { useState } from 'react';
 import { getUserCheckInLog } from '../modules/auth/core/_requests';
 
-// Define the expected shape of the log data
 interface LogData {
   ProductName: string;
   totalItems: number;
@@ -15,7 +14,7 @@ interface LogData {
   TokenId: any;
   TerminalImage: any;
   CheckedIn: any;
-  'Check In Time': string; // Add any other properties from your response
+  'Check In Time': string; 
 }
 
 interface UserAccount {
@@ -25,7 +24,7 @@ interface UserAccount {
 
 type StatusKey = 'N' | 'C' | 'CO' | 'CN' | 'DP' | 'AT' | 'RD' | 'PU' | 'NO';
 
-// Component for displaying the check-in status
+
 const CheckInStatus: React.FC<{ status: StatusKey }> = ({ status }) => {
   const statusMap: Record<StatusKey, { color: string; label: string }> = {
     N: { color: 'orange', label: 'Waiting' },
@@ -50,7 +49,7 @@ const BuilderPage: React.FC = () => {
   const [viewLogList, setViewLogList] = useState<LogData[]>([]);
   const [total, setTotal] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
-  // Parse user information from sessionStorage
+
   const userAccount: UserAccount = JSON.parse(sessionStorage.getItem('CurrentUserInfo') || '{}');
 
   const parseViewLog = async () => {
@@ -79,7 +78,7 @@ const BuilderPage: React.FC = () => {
         if (response.data === 'User Log not found') {
           setViewLogList([]);
           setTotal(0);
-          setErrorMessage('Products are not found.'); // Set error message
+          setErrorMessage('Products are not found.'); 
         }else
         if (Array.isArray(response.data)) {
           setViewLogList(response.data);
@@ -102,7 +101,7 @@ const BuilderPage: React.FC = () => {
         console.log('finaltotal', totalAmount);
       } catch (error) {
         console.error('Error fetching logs', error);
-        // You might want to show an alert or toast here
+      
       }
     } else {
       console.log('Difference of dates cannot be more than 30 days.');
@@ -159,7 +158,7 @@ const BuilderPage: React.FC = () => {
               </div> */}
               <div className="card-body py-3">
                 <div className="table-responsive">
-                {errorMessage ? ( // Conditionally render error message
+                {errorMessage ? (
                     <div className="alert alert-warning">{errorMessage}</div>
                   ) : (
                   <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">

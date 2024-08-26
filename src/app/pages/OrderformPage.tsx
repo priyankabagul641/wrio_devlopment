@@ -22,7 +22,7 @@ interface Profile {
   email: string;
 }
 
-const defaultProfileId = '0'; // Default profile id; adjust as needed
+const defaultProfileId = '0'; 
 
 const OrderformPage: FC = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const OrderformPage: FC = () => {
       const parsedProfiles: Profile[] = JSON.parse(storedProfiles).map((profile: any, index: number) => ({
         id: index.toString(),
         name: profile['Customer Name'] || '',
-        image: profile.Image || 'https://via.placeholder.com/100',
+        image: profile.Image ,
         address: profile.Address || '',
         mobileNumber: profile['Mobile Number'] || '',
         gstNo: profile.GSTIN || '',
@@ -52,8 +52,7 @@ const OrderformPage: FC = () => {
       }));
       setProfiles(parsedProfiles);
       setFilteredProfiles(parsedProfiles);
-      
-      // Set default profile
+     
       const defaultProfile = parsedProfiles.find(profile => profile.id === defaultProfileId);
       if (defaultProfile) {
         setSelectedProfile(defaultProfile);
@@ -63,7 +62,7 @@ const OrderformPage: FC = () => {
 
   useEffect(() => {
     if (selectedProfile) {
-      // Automatically populate the form fields with the selected profile values
+    
     }
   }, [selectedProfile]);
 
