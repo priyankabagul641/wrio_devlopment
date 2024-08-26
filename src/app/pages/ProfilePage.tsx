@@ -29,7 +29,7 @@ const ProfilePage: FC = () => {
         await deleteProfile(userInfo.UserId, userInfo._id.$id);
         sessionStorage.clear();
         alert('Profile deleted successfully');
-        navigate('/auth/login'); // Redirect to login page after deletion
+        navigate('/auth/login'); 
       } catch (error) {
         console.error('Error deleting profile:', error);
     alert('Failed to delete profile');
@@ -39,7 +39,7 @@ const ProfilePage: FC = () => {
 
   const handleLogout = () => {
     sessionStorage.clear();
-    navigate('/auth/login'); // Redirect to login page after logout
+    navigate('/auth/login'); 
   }
 
   if (!userInfo) {

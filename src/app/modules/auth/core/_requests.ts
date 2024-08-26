@@ -4,7 +4,7 @@ import { AuthModel, TerminalDetail, User, UserModel } from "./_models";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
-export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/verify_token`;
+// export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/verify_token`;
 export const LOGIN_URL = `${API_URL}/login`;
 export const REGISTER_URL = `${API_URL}/register`;
 export const REQUEST_PASSWORD_URL = `${API_URL}/forgot_password`;
@@ -119,9 +119,9 @@ export const getVerifiedOTPInfo = async () => {
 
 export const clientLogin = async (emailId: any) => {
 
-    // const fcmToken = localStorage.getItem('FCMToken');
+   
     const fcmToken='c4ycAOwME0Ohm5sYda1dgQ:APA91bECJKU7v4GcuGSWVG4z7xIF317w_saIdCV8Y-C0e-whXE5YlclrT8j3exai3BnkkAMSNc__iaqaBZFQVFIfT3bSlEGOdgsEAr9X9XtmQCcyXxZDXdk-WmrJapM5vq7DpToiFnr5'
-    // let deviceOs = localStorage.getItem("currentPlatform");
+    
     let deviceOs = 'Windows Phone'
     const url = `https://api.checkmeinweb.com/APIv2/ClientFunctions.php?function=ClientLogin&Uname=@&EmailId=${emailId}&DeviceARN=${fcmToken}&DeviceOS=${deviceOs}&FCMToken=${fcmToken}`;
 

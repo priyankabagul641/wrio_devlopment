@@ -14,7 +14,7 @@ const HeaderUserMenu: FC = () => {
   const testUser = {
     name: 'Test Bagul',
     email: 'test@gmail.com',
-    avatar: 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-2.webp',
+    // avatar: 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-2.webp',
     badge: 'Pro',
     projectsCount: 3,
   };
@@ -27,7 +27,7 @@ const HeaderUserMenu: FC = () => {
       <div className='menu-item px-3'>
         <div className='menu-content d-flex align-items-center px-3'>
           <div className='symbol symbol-50px me-5'>
-            <img alt='Logo' src={toAbsoluteUrl(testUser.avatar)} />
+            {/* <img alt='Logo' src={toAbsoluteUrl(testUser.avatar)} /> */}
           </div>
           <div className='d-flex flex-column'>
             <div className='fw-bolder d-flex align-items-center fs-5'>

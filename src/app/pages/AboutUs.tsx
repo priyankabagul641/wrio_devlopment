@@ -13,7 +13,7 @@ const AboutUsPage = ()=>{
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
               <div className='me-7 mb-4'>
                 <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
-                  <img src='src/app/assets/imgs/wrio-logo.png' alt='Profile' />
+                  <img src='assets/imgs/wrio-logo.png' alt='Profile' />
                   
                 </div>
               </div>

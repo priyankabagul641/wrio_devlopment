@@ -4,7 +4,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import clsx from 'clsx';
 import { KTIcon } from '../../../../_metronic/helpers';
-import { UserLoginOrRegister, UserRegister, UserRegisterIn,getUserAcccountInfo } from "../core/_requests";
+import {UserRegisterIn,getUserAcccountInfo } from "../core/_requests";
 import { User } from '../core/_models';
 import { useNavigate } from 'react-router-dom';
 

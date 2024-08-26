@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal, Button, Form } from 'react-bootstrap'; // Install react-bootstrap and bootstrap if not already installed
-import { SearchComponent } from '../../_metronic/assets/ts/components';
+import { Modal, Button, Form } from 'react-bootstrap';
 import { KTIcon } from '../../_metronic/helpers';
-import { search, getrecentsearch, getTerminalById, getAccountInfo } from '../modules/auth/core/_requests'; // Ensure this path is correct
+import { search, getrecentsearch, getTerminalById, getAccountInfo } from '../modules/auth/core/_requests';
+import { SearchComponent } from '../../_metronic/assets/ts/components';
 import { TerminalDetail } from '../modules/auth';
 
 interface UserAccount {
@@ -16,7 +16,7 @@ const Search: FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [recentSearchResults, setRecentSearchResults] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [err, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [accessKey, setAccessKey] = useState<string>('');
   const [selectedWrioCode, setSelectedWrioCode] = useState<string>('');
@@ -25,11 +25,8 @@ const Search: FC = () => {
   const resultsElement = useRef<HTMLDivElement | null>(null);
   const suggestionsElement = useRef<HTMLDivElement | null>(null);
   const emptyElement = useRef<HTMLDivElement | null>(null);
-  const [terminalData, setterminalData] = useState<TerminalDetail[]>([]);
   const navigate = useNavigate();
-  const userAccount: UserAccount = JSON.parse(
-    sessionStorage.getItem('CurrentUserInfo') || '{}'
-  );
+  const userAccount: UserAccount = JSON.parse(sessionStorage.getItem('CurrentUserInfo') || '{}');
 
   const processs = (searchComponent: SearchComponent) => {
     const query = (searchComponent.getQuery() || '').trim();
@@ -44,29 +41,42 @@ const Search: FC = () => {
       .then((response) => {
         const results = response.map((item: any) => ({
           name: item.TerminalName,
-          image: item.Image || 'default-image-url',
+          image: item.Image,
           wrioCode: item.WrioCode,
           IsPrivate: item.IsPrivate,
           Status: item.Status,
         }));
-
+        
         setSearchResults(results);
         setError(null);
         setLoading(false);
 
         if (results.length > 0) {
-          resultsElement.current!.classList.remove('d-none');
-          emptyElement.current!.classList.add('d-none');
+          if (resultsElement.current) {
+            resultsElement.current.classList.remove('d-none');
+          }
+          if (emptyElement.current) {
+            emptyElement.current.classList.add('d-none');
+          }
         } else {
-          resultsElement.current!.classList.add('d-none');
-          emptyElement.current!.classList.remove('d-none');
+          if (resultsElement.current) {
+            resultsElement.current.classList.add('d-none');
+          }
+          if (emptyElement.current) {
+            emptyElement.current.classList.remove('d-none');
+          }
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         setError('An error occurred while fetching search results.');
         setLoading(false);
-        resultsElement.current!.classList.add('d-none');
-        emptyElement.current!.classList.remove('d-none');
+
+        if (resultsElement.current) {
+          resultsElement.current.classList.add('d-none');
+        }
+        if (emptyElement.current) {
+          emptyElement.current.classList.remove('d-none');
+        }
       })
       .finally(() => {
         searchComponent.complete();
@@ -78,7 +88,7 @@ const Search: FC = () => {
       const recentResults = await getrecentsearch(userAccount.UserId);
       const recentSearchResults = recentResults.data.map((item: any) => ({
         name: item.TerminalName,
-        image: item.Image || 'default-image-url',
+        image: item.Image,
         wrioCode: item.WrioCode,
       }));
       setRecentSearchResults(recentSearchResults);
@@ -91,9 +101,15 @@ const Search: FC = () => {
     setSearchResults([]);
     setError(null);
     setLoading(false);
-    suggestionsElement.current!.classList.remove('d-none');
-    resultsElement.current!.classList.add('d-none');
-    emptyElement.current!.classList.add('d-none');
+    if (suggestionsElement.current) {
+      suggestionsElement.current.classList.remove('d-none');
+    }
+    if (resultsElement.current) {
+      resultsElement.current.classList.add('d-none');
+    }
+    if (emptyElement.current) {
+      emptyElement.current.classList.add('d-none');
+    }
   };
 
   useEffect(() => {
@@ -102,8 +118,16 @@ const Search: FC = () => {
 
   useEffect(() => {
     const searchObject = SearchComponent.createInsance('#kt_header_search');
-    searchObject!.on('kt.search.process', processs);
-    searchObject!.on('kt.search.clear', clear);
+    
+    if (searchObject) {
+      searchObject.on('kt.search.process', processs as any);
+      searchObject.on('kt.search.clear', clear as any);
+
+      return () => {
+        searchObject.off('kt.search.process', processs as any);
+        searchObject.off('kt.search.clear', clear as any);
+      };
+    }
   }, []);
 
   const handleResultClick = async (wrioCode: string, isPrivate: boolean, status: string) => {
@@ -115,7 +139,7 @@ const Search: FC = () => {
         setShowModal(true);
       }
     } else {
-      console.log('Currently this terminal is closed');
+      console.log('Currently, this terminal is closed');
     }
   };
 
@@ -124,7 +148,6 @@ const Search: FC = () => {
 
     if (terminalData) {
       const accountInfo = await getAccountInfo(terminalData.AccountId);
-console.log(accountInfo);
 
       if (accountInfo) {
         terminalData.MobileNo = accountInfo.MobileNo;
@@ -167,7 +190,7 @@ console.log(accountInfo);
         id="kt_header_search"
         className="d-flex align-items-stretch"
         data-kt-search-keypress="true"
-        data-kt-search-min-length="2"
+        data-kt-search-min-length="3"
         data-kt-search-enter="enter"
         data-kt-search-layout="menu"
         data-kt-menu-trigger="auto"
@@ -216,57 +239,36 @@ console.log(accountInfo);
               <span
                 className={`position-absolute top-50 end-0 translate-middle-y lh-0 ${
                   loading ? '' : 'd-none'
-                } me-1`}
+                }`}
                 data-kt-search-element="spinner"
               >
-                <span className="spinner-border h-15px w-15px align-middle text-gray-500" />
+                <KTIcon iconName="spinner" className="fs-2 text-gray-500" />
               </span>
-
-              <span
-                className={`btn btn-flush btn-active-color-primary position-absolute top-50 end-0 translate-middle-y lh-0 ${
-                  !searchResults.length ? 'd-none' : ''
-                }`}
-                data-kt-search-element="clear"
-                onClick={clear}
-              >
-                <KTIcon iconName="cross" className="fs-2 text-lg-1 me-0" />
-              </span>
-
-              <div
-                className="position-absolute top-50 end-0 translate-middle-y"
-                data-kt-search-element="toolbar"
-              >
-                {/* Toolbar content */}
-              </div>
             </form>
+
             <div
               ref={resultsElement}
               data-kt-search-element="results"
-              className={`d-none ${loading ? 'd-none' : ''}`}
+              className={`d-none`}
             >
-              <div className="scroll-y mh-200px mh-lg-325px">
-                {searchResults.map((result, index) => (
+              <div className="scroll-y mh-200px mh-lg-350px">
+                {searchResults.map((item, index) => (
                   <div
                     key={index}
-                    className="d-flex text-gray-900 text-hover-primary align-items-center mb-5"
-                    onClick={() =>
-                      handleResultClick(result.wrioCode, result.IsPrivate, result.Status)
-                    }
+                    className="d-flex align-items-center mb-5"
+                    onClick={() => handleResultClick(item.wrioCode, item.IsPrivate, item.Status)}
                     style={{ cursor: 'pointer' }}
                   >
                     <div className="symbol symbol-40px me-4">
-                      <img src={result.image} alt={result.name} />
+                      <img src={item.image} alt="" />
                     </div>
-                    <div className="d-flex flex-column justify-content-start fw-bold">
-                      <span className="fs-6 fw-bold">{result.name}</span>
-                      <span className="fs-7 fw-bold text-muted">
-                        {result.wrioCode}
+
+                    <div className="d-flex flex-column">
+                      <span className="fs-6 fw-bold text-gray-800 text-hover-primary">
+                        {item.name}
                       </span>
-                      <span className="fs-7 fw-bold text-muted">
-                        {result.IsPrivate ? 'Private' : 'Public'}
-                      </span>
-                      <span className="fs-7 fw-bold text-muted">
-                        {result.Status}
+                      <span className="fw-semibold text-gray-400">
+                        Wrio Code: {item.wrioCode}
                       </span>
                     </div>
                   </div>
@@ -274,14 +276,48 @@ console.log(accountInfo);
               </div>
             </div>
 
-            <div ref={emptyElement} data-kt-search-element="empty" className="d-none">
-              <div className="text-center py-10">
-                <div className="mb-5">
-                  <KTIcon iconName="magnifier-question" className="fs-3x" />
+            <div
+              ref={suggestionsElement}
+              data-kt-search-element="suggestions"
+              className={`pt-3 ${recentSearchResults.length > 0 ? '' : 'd-none'}`}
+            >
+              <h3 className="fw-bold mb-5">Recently Searched:</h3>
+
+              {recentSearchResults.map((item, index) => (
+                <div
+                  key={index}
+                  className="d-flex align-items-center mb-5"
+                  onClick={() => handleResultClick(item.wrioCode, false, 'ON')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="symbol symbol-40px me-4">
+                    <img src={item.image} alt="" />
+                  </div>
+
+                  <div className="d-flex flex-column">
+                    <span className="fs-6 fw-bold text-gray-800 text-hover-primary">
+                      {item.name}
+                    </span>
+                    <span className="fw-semibold text-gray-400">
+                      Wrio Code: {item.wrioCode}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-gray-600 fs-5 fw-semibold">
-                  No results found.
-                </div>
+              ))}
+            </div>
+
+            <div
+              ref={emptyElement}
+              data-kt-search-element="empty"
+              className={`text-center d-none`}
+            >
+              <div className="pt-10 pb-10">
+                <KTIcon iconName="element-plus" className="fs-4x opacity-50" />
+              </div>
+
+              <div className="pb-15 fw-bold">
+                <h3>No search results found</h3>
+                <div className="text-muted fs-6">Try searching with a different term</div>
               </div>
             </div>
           </div>
@@ -289,7 +325,7 @@ console.log(accountInfo);
       </div>
 
       {/* Modal for Access Key */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Enter Access Key</Modal.Title>
         </Modal.Header>
@@ -297,7 +333,7 @@ console.log(accountInfo);
           <Form.Group>
             <Form.Label>Access Key</Form.Label>
             <Form.Control
-              type="password"
+              type="text"
               value={accessKey}
               onChange={(e) => setAccessKey(e.target.value)}
             />

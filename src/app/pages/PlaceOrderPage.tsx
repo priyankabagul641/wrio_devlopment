@@ -12,7 +12,7 @@ const PlaceOrderPage: FC = () => {
   const navigate = useNavigate();
   const [sections, setSections] = useState<Section[]>([]);
   const [comment, setComment] = useState<string>('');
-  const [isConnected, setIsConnected] = useState<boolean>(true); // You should implement this based on your connectivity logic
+  const [isConnected, setIsConnected] = useState<boolean>(true);
   const [terminal, setTerminal] = useState({
     AskComment: 'Y',
     CommentMessage: 'Would you like to leave a comment?',
@@ -21,7 +21,7 @@ const PlaceOrderPage: FC = () => {
     FT: 'AA',
   });
   useEffect(() => {
-    // Retrieve and parse the SectionData from session storage
+  
     const storedSectionData = sessionStorage.getItem('SectionsData');
     if (storedSectionData) {
       const parsedSectionData = JSON.parse(storedSectionData);

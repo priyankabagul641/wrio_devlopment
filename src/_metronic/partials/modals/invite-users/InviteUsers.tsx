@@ -5,7 +5,7 @@ import {KTIcon, toAbsoluteUrl} from '../../../helpers'
 const InviteUsers: FC = () => {
   const users = [
     {
-      avatar: 'media/avatars/300-6.jpg',
+      // avatar: 'assets/imgs/logo.png/300-6.jpg',
       name: 'Emma Smith',
       email: 'e.smith@kpmg.com.au',
       access: '1',
@@ -17,19 +17,19 @@ const InviteUsers: FC = () => {
       access: '1',
     },
     {
-      avatar: 'media/avatars/300-1.jpg',
+      // avatar: 'assets/imgs/logo.png/300-1.jpg',
       name: 'Max Smith',
       email: 'max@kt.com',
       access: '3',
     },
     {
-      avatar: 'media/avatars/300-1.jpg',
+      // avatar: 'assets/imgs/logo.png/300-1.jpg',
       name: 'Sean Bean',
       email: 'sean@dellito.com',
       access: '2',
     },
     {
-      avatar: 'media/avatars/300-25.jpg',
+      // avatar: 'assets/imgs/logo.png/300-25.jpg',
       name: 'Brian Cox',
       email: 'brian@exchange.com',
       access: '3',
@@ -41,7 +41,7 @@ const InviteUsers: FC = () => {
       access: '2',
     },
     {
-      avatar: 'media/avatars/300-9.jpg',
+      // avatar: 'assets/imgs/logo.png/300-9.jpg',
       name: 'Francis Mitcham',
       email: 'f.mitcham@kpmg.com.au',
       access: '3',
@@ -59,7 +59,7 @@ const InviteUsers: FC = () => {
       access: '1',
     },
     {
-      avatar: 'media/avatars/300-23.jpg',
+      // avatar: 'assets/imgs/logo.png/300-23.jpg',
       name: 'Dan Wilson',
       email: 'dam@consilting.com',
       access: '3',
@@ -71,7 +71,7 @@ const InviteUsers: FC = () => {
       access: '2',
     },
     {
-      avatar: 'media/avatars/300-12.jpg',
+      // avatar: 'assets/imgs/logo.png/300-12.jpg',
       name: 'Ana Crown',
       email: 'ana.cf@limtel.com',
       access: '1',
@@ -83,7 +83,7 @@ const InviteUsers: FC = () => {
       access: '3',
     },
     {
-      avatar: 'media/avatars/300-13.jpg',
+      // avatar: 'assets/imgs/logo.png/300-13.jpg',
       name: 'John Miller',
       email: 'miller@mapple.com',
       access: '3',
@@ -95,13 +95,13 @@ const InviteUsers: FC = () => {
       access: '2',
     },
     {
-      avatar: 'media/avatars/300-21.jpg',
+      // avatar: 'assets/imgs/logo.png/300-21.jpg',
       name: 'Ethan Wilder',
       email: 'ethan@loop.com.au',
       access: '1',
     },
     {
-      avatar: 'media/avatars/300-12.jpg',
+      // avatar: 'assets/imgs/logo.png/300-12.jpg',
       name: 'Ana Crown',
       email: 'ana.cf@limtel.com',
       access: '3',
@@ -133,11 +133,11 @@ const InviteUsers: FC = () => {
             </div>
 
             <div className='btn btn-light-primary fw-bolder w-100 mb-8'>
-              <img
+              {/* <img
                 alt='Logo'
                 src={toAbsoluteUrl('media/svg/brand-logos/google-icon.svg')}
                 className='h-20px me-3'
-              />
+              /> */}
               Invite Gmail Contacts
             </div>
 
@@ -163,7 +163,7 @@ const InviteUsers: FC = () => {
                     >
                       <div className='d-flex align-items-center'>
                         <div className='symbol symbol-35px symbol-circle'>
-                          {user.avatar && <img alt='Pic' src={toAbsoluteUrl(user.avatar)} />}
+                          {/* {user.avatar && <img alt='Pic' src={toAbsoluteUrl(user.avatar)} />} */}
                           {user.state && (
                             <div className='symbol symbol-35px symbol-circle'>
                               <span

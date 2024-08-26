@@ -1,6 +1,6 @@
 
 import {FC, useEffect, useState} from 'react'
-import {KTIcon, toAbsoluteUrl} from '../../../../helpers'
+import {KTIcon, } from '../../../../helpers'
 
 const ToolbarExtended: FC = () => {
   const [progress, setProgress] = useState<string>('1')
@@ -27,13 +27,13 @@ const ToolbarExtended: FC = () => {
 
           {/* begin::User */}
           <div className='symbol symbol-circle symbol-35px'>
-            <img src={toAbsoluteUrl('media/avatars/300-1.jpg')} alt='' />
+            {/* <img src={toAbsoluteUrl('assets/imgs/logo.png/300-1.jpg')} alt='' /> */}
           </div>
           {/* end::User */}
 
           {/* begin::User */}
           <div className='symbol symbol-circle symbol-35px'>
-            <img src={toAbsoluteUrl('media/avatars/300-2.jpg')} alt='' />
+            {/* {/* <img src={toAbsoluteUrl('assets/imgs/logo.png/300-2.jpg')} alt='' /> */} 
           </div>
           {/* end::User */}
 
@@ -45,7 +45,7 @@ const ToolbarExtended: FC = () => {
 
           {/* begin::User */}
           <div className='symbol symbol-circle symbol-35px'>
-            <img src={toAbsoluteUrl('media/avatars/300-5.jpg')} alt='' />
+            {/* {/* <img src={toAbsoluteUrl('assets/imgs/logo.png/300-5.jpg')} alt='' /> */} 
           </div>
           {/* end::User */}
 
@@ -57,7 +57,7 @@ const ToolbarExtended: FC = () => {
 
           {/* begin::User */}
           <div className='symbol symbol-circle symbol-35px'>
-            <img src={toAbsoluteUrl('media/avatars/300-20.jpg')} alt='' />
+            {/* {/* <img src={toAbsoluteUrl('assets/imgs/logo.png/300-20.jpg')} alt='' /> */}
           </div>
           {/* end::User */}
         </div>

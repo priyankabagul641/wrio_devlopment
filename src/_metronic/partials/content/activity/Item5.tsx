@@ -27,7 +27,7 @@ const Item5: FC = () => {
               data-bs-placement='top'
               title='Marcus Dotson'
             >
-              <img src={toAbsoluteUrl('media/avatars/300-2.jpg')} alt='img' />
+              {/* <img src={toAbsoluteUrl('assets/imgs/logo.png/300-2.jpg')} alt='img' /> */}
             </div>
           </div>
         </div>
@@ -36,11 +36,11 @@ const Item5: FC = () => {
           <div className='d-flex align-items-center border border-dashed border-gray-300 rounded min-w-700px p-7'>
             <div className='overlay me-10'>
               <div className='overlay-wrapper'>
-                <img
+                {/* <img
                   alt='img'
                   className='rounded w-200px'
                   src={toAbsoluteUrl('media/stock/600x400/img-29.jpg')}
-                />
+                /> */}
               </div>
 
               <div className='overlay-layer bg-dark bg-opacity-10 rounded'>
@@ -52,11 +52,11 @@ const Item5: FC = () => {
 
             <div className='overlay me-10'>
               <div className='overlay-wrapper'>
-                <img
+                {/* <img
                   alt='img'
                   className='rounded w-200px'
                   src={toAbsoluteUrl('media/stock/600x400/img-31.jpg')}
-                />
+                /> */}
               </div>
 
               <div className='overlay-layer bg-dark bg-opacity-10 rounded'>
@@ -68,11 +68,11 @@ const Item5: FC = () => {
 
             <div className='overlay'>
               <div className='overlay-wrapper'>
-                <img
+                {/* <img
                   alt='img'
                   className='rounded w-200px'
                   src={toAbsoluteUrl('media/stock/600x400/img-40.jpg')}
-                />
+                /> */}
               </div>
 
               <div className='overlay-layer bg-dark bg-opacity-10 rounded'>

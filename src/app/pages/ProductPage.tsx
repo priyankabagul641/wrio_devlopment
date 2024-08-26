@@ -39,6 +39,7 @@ const ProductPage: FC = () => {
         setProduct(response.data);
         console.log(response.data);
         const sesctionData=response.data
+        sessionStorage.setItem("TerminalInfo", JSON.stringify(sesctionData));
         sessionStorage.setItem("SectionsData", JSON.stringify(sesctionData.section));
         setLoading(false);
       })
