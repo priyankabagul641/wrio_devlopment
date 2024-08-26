@@ -54,13 +54,22 @@ console.log(results);
         setSearchResults(results);
         setError(null);
         setLoading(false);
-
+        console.log(resultsElement.current);
         if (results.length > 0) {
-          resultsElement.current!.classList.remove('d-none');
-          emptyElement.current!.classList.add('d-none');
+          console.log(resultsElement.current);
+          if (resultsElement.current) {
+            resultsElement.current.classList.remove('d-none');
+          }
+          if (emptyElement.current) {
+            emptyElement.current.classList.add('d-none');
+          }
         } else {
-          resultsElement.current!.classList.add('d-none');
-          emptyElement.current!.classList.remove('d-none');
+          if (resultsElement.current) {
+            resultsElement.current.classList.add('d-none');
+          }
+          if (emptyElement.current) {
+            emptyElement.current.classList.remove('d-none');
+          }
         }
       })
       .catch((err:any) => {
@@ -68,8 +77,12 @@ console.log(results);
         setLoading(false);
         console.log(err);
         
-        resultsElement.current!.classList.add('d-none');
-        emptyElement.current!.classList.remove('d-none');
+        if (resultsElement.current) {
+          resultsElement.current.classList.add('d-none');
+        }
+        if (emptyElement.current) {
+          emptyElement.current.classList.remove('d-none');
+        }
       })
       .finally(() => {
         searchComponent.complete();
